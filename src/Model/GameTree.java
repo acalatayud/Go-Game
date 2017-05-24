@@ -16,14 +16,14 @@ public class GameTree {
 
     /**
      * Construye el árbol y retorna el Node representando
-     * la mejor jugada.
+     * la mejor jugada encontrada,
      * @return
      */
     private Node buildTree(){
         return new Node(0,0,false);//dummy
     }
 
-    public ArrayList<Node> makeMoves(Board board, boolean isPLayer) {
+    public ArrayList<Node> generateMoves(Board board, boolean isPLayer) {
         ArrayList<Node> moves = new ArrayList<>();
 
         for(int i=0; i < Constants.boardSize ; i++){
