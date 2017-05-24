@@ -10,7 +10,7 @@ import java.util.HashSet;
  * and a primitive array with:
  *     0 representing an empty position
  *     1 representing a position held by the player
- *     -1 representing a position held by the AI
+ *     2 representing a position held by the AI
  */
 public class Board {
     private static class Piece{
@@ -37,8 +37,8 @@ public class Board {
     private char[][] board = new char[Constants.boardSize][Constants.boardSize];
 
     public Board(){
-        playerPieces = new ArrayList<>();
-        aiPieces = new ArrayList<>();
+        playerPieces = new HashSet<>();
+        aiPieces = new HashSet<>();
     }
 
     public boolean addPiece(int xPos, int yPos, boolean isPlayer){
@@ -50,7 +50,7 @@ public class Board {
                 playerPieces.add(new Piece(xPos,yPos,true));
             }
             else {
-                board[xPos][yPos]=0;
+                board[xPos][yPos]=2;
                 aiPieces.add(new Piece(xPos,yPos,false));
             }
             return true;
@@ -66,6 +66,9 @@ public class Board {
     }
 
     public boolean gameFinished(){
+        if (playerPieces.size()+aiPieces.size()== Constants.boardSize*Constants.boardSize)
+            return true;
+        // Faltan casos
         return false;
     }
 }
