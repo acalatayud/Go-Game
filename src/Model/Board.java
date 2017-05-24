@@ -55,6 +55,10 @@ public class Board {
         }
     }
 
+    public int checkSpace(int xPos, int yPos){
+        return board[xPos][yPos];
+    }
+
     public int playerPiecesCardinal(){
         return playerPieces.size();
     }
