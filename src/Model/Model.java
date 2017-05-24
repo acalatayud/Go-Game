@@ -5,6 +5,10 @@ package Model;
  */
 public class Model {
     public int ponderHeuristicValue(){
-        return 0;
+        return 0;//dummy
+    }
+
+    public Board getAIMove(Board board){
+        return new Board();//dummy para q compile
     }
 }
