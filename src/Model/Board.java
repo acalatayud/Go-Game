@@ -32,7 +32,7 @@ public class Board {
 
     private HashSet<Piece> playerPieces;
     private HashSet<Piece> aiPieces;
-    private char[][] board = new char[Constants.boardSize][Constants.boardSize];
+    private int[][] board = new int[Constants.boardSize][Constants.boardSize];
 
     public Board(){
         playerPieces = new HashSet<>();
@@ -40,15 +40,15 @@ public class Board {
     }
 
     public boolean addPiece(int xPos, int yPos, boolean isPlayer){
-        if (board[xPos][yPos]!=0)
+        if (board[yPos][xPos]!=0)
             return false;
         else{
             if (isPlayer){
-                board[xPos][yPos]=1;
+                board[yPos][xPos]=1;
                 playerPieces.add(new Piece(xPos,yPos,true));
             }
             else {
-                board[xPos][yPos]=2;
+                board[yPos][xPos]=2;
                 aiPieces.add(new Piece(xPos,yPos,false));
             }
             return true;
@@ -56,7 +56,7 @@ public class Board {
     }
 
     public int checkSpace(int xPos, int yPos){
-        return board[xPos][yPos];
+        return board[yPos][xPos];
     }
 
     public int playerPiecesCardinal(){
