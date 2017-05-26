@@ -1,10 +1,12 @@
 package Model;
 
+import static Controller.Controller.waitForPlayerMove;
+
 /**
  * Created by juan on 23/05/17.
  */
 public class Model {
-    public int ponderHeuristicValue(){
+    public int ponderHeuristicValue(Board board){
         /**
          * El tema es el siguiente, la catedra pide que hagamos un algoritmo
          * determinista y resulta que no existe una funcion que pondera el valor
@@ -47,5 +49,39 @@ public class Model {
 
     public Board getAIMove(Board board){
         return new Board();//dummy para q compile
+    }
+
+    public int calculateTerritory(int player, Board board){
+        return 0;
+    }
+
+    /**
+     * Calculates which player has the most points.
+     * @param board
+     * @return integer (1 or 2) representing the player who won
+     */
+    public int calculateWinner(Board board){
+        return 1;
+    }
+
+    public void gameLoop(int playerTurn, Board board){
+        while(!board.gameFinished()){
+            switch(playerTurn){
+                case 1:
+                    board = waitForPlayerMove(board);
+                    //actualizar por pantalla tablero
+                    playerTurn = 2;
+                    break;
+                case 2:
+                    board = getAIMove(board);
+                    //actualizar por pantalla tablero
+                    playerTurn = 1;
+                    break;
+                default:
+                    throw new IllegalArgumentException("gameLoop received an illegal playerTurn integer");
+            }
+        }
+        int winner = calculateWinner(board);
+        // Mandar por pantalla el ganador
     }
 }
