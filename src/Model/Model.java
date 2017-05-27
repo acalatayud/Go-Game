@@ -102,7 +102,7 @@ public class Model {
                     points[0]+=borders.get(1).size();
                 }
                 if(player2&&!player1){
-                    points[1]=borders.get(1).size();
+                    points[1]+=borders.get(1).size();
                 }
 
                 player1=false;
