@@ -29,7 +29,7 @@ public class Controller {
     			}
     			else {
     				if(c != ' ')
-    					board.addPiece(xPos, yPos, c=='1');
+    					board.addPiece(xPos, yPos, c);
     				xPos++;
     			}
     		}

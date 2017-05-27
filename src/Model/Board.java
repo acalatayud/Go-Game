@@ -12,14 +12,14 @@ import java.util.HashSet;
  */
 public class Board {
     private static class Piece{
-        private boolean isPlayer;
+        private int player;
         private Integer xPos;
         private Integer yPos;
 
-        public Piece(int xPos, int yPos, boolean isPlayer){
+        public Piece(int xPos, int yPos, int player){
             this.xPos = xPos;
             this.yPos = yPos;
-            this.isPlayer = isPlayer;
+            this.player = player;
         }
 
         public int hashCode() {
@@ -39,18 +39,12 @@ public class Board {
         aiPieces = new HashSet<>();
     }
 
-    public boolean addPiece(int xPos, int yPos, boolean isPlayer){
+    public boolean addPiece(int xPos, int yPos, int player){
         if (board[yPos][xPos]!=0)
             return false;
         else{
-            if (isPlayer){
-                board[yPos][xPos]=1;
-                playerPieces.add(new Piece(xPos,yPos,true));
-            }
-            else {
-                board[yPos][xPos]=2;
-                aiPieces.add(new Piece(xPos,yPos,false));
-            }
+            board[yPos][xPos]=player;
+            playerPieces.add(new Piece(xPos,yPos,player));
             return true;
         }
     }
