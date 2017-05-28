@@ -1,5 +1,7 @@
 package View;
 
+import Model.Board;
+import Model.Model;
 import Service.Constants;
 
 import javax.swing.*;
@@ -10,7 +12,15 @@ import java.awt.*;
  */
 public class BoardView {
     public static void main(String[] args){
-        BoardView boardview = new BoardView();
+        Board test = new Board();
+        test.addPiece(1,0,1);
+        test.addPiece(1,2,1);
+        test.addPiece(1,1,1);
+        test.addPiece(0,3,1);
+        test.addPiece(4,7,2);
+        System.out.println(test);
+        System.out.println("Player 1 holds " + Model.calculateTerritory(test)[0] + " spaces.\nPlayer 2 holds " + Model.calculateTerritory(test)[1]+" spaces.");
+        //BoardView boardview = new BoardView();
     }
     public BoardView() {
         initialize();

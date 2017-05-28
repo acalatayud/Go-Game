@@ -67,4 +67,18 @@ public class Board {
         // Faltan casos
         return false;
     }
+
+    //For debugging
+    public String toString(){
+        String ans = "";
+        for(int i=0;i<13;i++){
+            ans+= "[";
+            for(int j=0;j<13;j++){
+                ans+=this.checkSpace(i,j);
+                ans+="   ";
+            }
+            ans+= "]\n";
+        }
+        return ans;
+    }
 }

@@ -70,7 +70,7 @@ public class Model {
      *                 add points
      *
      */
-    public int[] calculateTerritory(Board realBoard){
+    public static int[] calculateTerritory(Board realBoard){
         Board mockBoard = new Board(); // 0 is unvisited, 1 is visited
 
         // First array: 0 is out of board, 1 is player 1, 2 is player 2
@@ -78,7 +78,6 @@ public class Model {
         ArrayList<ArrayList<Integer>> borders = new ArrayList<>();
         borders.add(new ArrayList<Integer>());
         borders.add(new ArrayList<Integer>());
-        borders.get(1).add(0);// Start spaces counted at 0
 
         int[] points = {0,0}; // return parameter: First element represents player 1's points, second element represents player 2's points.
         boolean player1=false;
@@ -108,19 +107,23 @@ public class Model {
                 player1=false;
                 player2=false;
                 borders = new ArrayList<>();
+                borders.add(new ArrayList<Integer>());
+                borders.add(new ArrayList<Integer>());
             }
         }
         return points;
     }
 
-    private ArrayList<ArrayList<Integer>> floodFill(Board mockBoard, Board realBoard, int xPos, int yPos, ArrayList<ArrayList<Integer>> borders){
+    private static ArrayList<ArrayList<Integer>> floodFill(Board mockBoard, Board realBoard, int xPos, int yPos, ArrayList<ArrayList<Integer>> borders){
         int space;
         if( xPos<0 || xPos>12 || yPos<0 || yPos>12){
             borders.get(0).add(0);
             return borders;
         }
-        if (mockBoard.checkSpace(xPos,yPos)==1)// If space is already visited.
+        if (mockBoard.checkSpace(xPos,yPos)==1) {// If space is already visited.
+            borders.get(0).add(realBoard.checkSpace(xPos,yPos));
             return borders;
+        }
         else {
             mockBoard.addPiece(xPos, yPos, 1); // Mark as visited.
         }
