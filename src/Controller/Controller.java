@@ -136,29 +136,3 @@ public class Controller {
     	return board;
     }
 }
-
-/*
-			if(args[0].equals("-visual")||args[0].equals("-file")) {
-				int index=0;
-				if (args[0].equals("-visual")) {
-					// do visual
-				} else{
-					//do file
-				}
-				if(args[index].equals("-maxtime")||args[index].equals("-depth")){
-					if(args[index].equals("-maxtime")){
-						//do maxtime
-					}
-					else{
-						//do depth
-					}
-
-				}
-				else{
-					throw new IllegalArgumentException("Need -maxtime or -depth, try:\njava -jar tpe.jar (-visual | -file archivo -player n) (-maxtime n | -depth n) [-prune] [-tree]");
-				}
-			}
-			else{
-				throw new IllegalArgumentException("Need -visual or -file, try:\njava -jar tpe.jar (-visual | -file archivo -player n) (-maxtime n | -depth n) [-prune] [-tree]");
-			}
-			*/
