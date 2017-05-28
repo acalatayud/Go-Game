@@ -5,4 +5,7 @@ package Service;
  */
 public class Constants {
     public static final int boardSize = 13;
+    public static int maxTime=5; // Expressed in seconds
+    public static int depth=10;
+    public static boolean prune=false;
 }
