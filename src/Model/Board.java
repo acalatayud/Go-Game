@@ -3,6 +3,8 @@ package Model;
 import Service.Constants;
 import java.util.HashSet;
 
+import static Model.Model.calculateTerritory;
+
 /**
  * The board is represented by a HashSet of player Pieces, a HashSet of AI Pieces,
  * and a primitive array with:
@@ -32,11 +34,15 @@ public class Board {
 
     private HashSet<Piece> playerPieces;
     private HashSet<Piece> aiPieces;
+    int player1Captures;
+    int player2Captures;
     private int[][] board = new int[Constants.boardSize][Constants.boardSize];
 
     public Board(){
         playerPieces = new HashSet<>();
         aiPieces = new HashSet<>();
+        player1Captures=0;
+        player2Captures=0;
     }
 
     public boolean addPiece(int xPos, int yPos, int player){
@@ -66,6 +72,19 @@ public class Board {
             return true;
         // Faltan casos
         return false;
+    }
+
+    /**
+     * Calculates which player has the most points.
+     * @return integer (1 or 2 or 0) representing the player who won, or 0 if it is a tie
+     */
+    public int calculateWinner(){
+        int[] territory = calculateTerritory(this);
+        int winner;
+        if ( (winner = territory[0]+this.player1Captures - (territory[1]+this.player2Captures)) == 0)
+            return winner;
+
+        return winner > 0 ? 1 : 2;
     }
 
     //For debugging

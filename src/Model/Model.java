@@ -143,15 +143,6 @@ public class Model {
         return borders;
     }
 
-    /**
-     * Calculates which player has the most points.
-     * @param board
-     * @return integer (1 or 2) representing the player who won
-     */
-    public int calculateWinner(Board board){
-        return 1;
-    }
-
     public void gameLoop(int playerTurn, Board board){
         while(!board.gameFinished()){
             switch(playerTurn){
@@ -169,7 +160,7 @@ public class Model {
                     throw new IllegalArgumentException("gameLoop received an illegal playerTurn integer");
             }
         }
-        int winner = calculateWinner(board);
+        int winner = board.calculateWinner();
         // Mandar por pantalla el ganador
     }
 }

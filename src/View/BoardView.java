@@ -20,6 +20,7 @@ public class BoardView {
         test.addPiece(4,7,2);
         System.out.println(test);
         System.out.println("Player 1 holds " + Model.calculateTerritory(test)[0] + " spaces.\nPlayer 2 holds " + Model.calculateTerritory(test)[1]+" spaces.");
+        System.out.println("The winner is: " + test.calculateWinner());
         //BoardView boardview = new BoardView();
     }
     public BoardView() {
