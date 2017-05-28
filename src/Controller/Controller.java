@@ -29,6 +29,12 @@ public class Controller {
 
 				if (file!=-1){
 					String filename = argsList.get(file+1);
+					File file = new File(filename);
+					if(!file.exists())
+						throw new FileNotFoundException()
+					Board startingBoard = readBoard(file);
+					if(startingBoard == null)
+						throw new IOException();
 				}
 
 				int player = argsList.indexOf("-player");
@@ -90,6 +96,10 @@ public class Controller {
 		}
 		catch (IllegalArgumentException e){
 			System.out.println("Invalid parameters, try:\njava -jar tpe.jar (-visual | -file archivo -player n) (-maxtime n | -depth n) [-prune] [-tree]\n");
+			return;
+		}
+		catch (IOException e){
+			System.out.println("Invalid file\n");
 			return;
 		}
 		// Parsed values:
