@@ -32,7 +32,7 @@ public class GameTree {
 
     private Node buildTreeRecursive(Board board, Node current, int player, int depth) {
         if (maxReached(depth)) {
-            current.setHeuristicValue(Model.ponderHeuristicValue(board));
+            current.setHeuristicValue(Model.ponderHeuristicValue(board, player));
             return current;
         }
 
@@ -62,7 +62,6 @@ public class GameTree {
                 if (board.checkSpace(i,j)!=0)
                     break;
                 toAdd = new Node(i,j,player);
-                toAdd.setHeuristicValue(Model.ponderHeuristicValue(board));
                 moves.add(toAdd);
             }
         }
