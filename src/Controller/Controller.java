@@ -2,6 +2,7 @@ package Controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -29,10 +30,10 @@ public class Controller {
 
 				if (file!=-1){
 					String filename = argsList.get(file+1);
-					File file = new File(filename);
-					if(!file.exists())
-						throw new FileNotFoundException()
-					Board startingBoard = readBoard(file);
+					File fileHandler = new File(filename);
+					if(!fileHandler.exists())
+						throw new FileNotFoundException();
+					Board startingBoard = readBoard(fileHandler);
 					if(startingBoard == null)
 						throw new IOException();
 				}

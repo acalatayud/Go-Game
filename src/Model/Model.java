@@ -10,7 +10,7 @@ import static Controller.Controller.waitForPlayerMove;
  * Created by juan on 23/05/17.
  */
 public class Model {
-    public int ponderHeuristicValue(Board board){
+    public static int ponderHeuristicValue(Board board){//por el momento dejo static
         /**
          * El tema es el siguiente, la catedra pide que hagamos un algoritmo
          * determinista y resulta que no existe una funcion que pondera el valor

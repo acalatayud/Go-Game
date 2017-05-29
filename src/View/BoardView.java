@@ -6,12 +6,13 @@ import Service.Constants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Created by juan on 23/05/17.
  */
 public class BoardView {
-
+/*
     private class ButtonListener{
         public void actionPerformed(ActionEvent e){
             int i = 0;
@@ -57,9 +58,7 @@ public class BoardView {
     }
 
     public void buttonClick(){}
-/**
- *
- * */
+
     public boolean setPostition(int color, int pos){
         JButton b;
         Component[] comp = stoneButtonsPanel.getComponents();
@@ -84,4 +83,5 @@ public class BoardView {
         }
         return false;
     }
+    */
 }

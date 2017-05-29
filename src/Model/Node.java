@@ -25,6 +25,10 @@ public class Node {
         children.add(new Node(xPos,yPos,player));
     }
 
+    public void setHeuristicValue(int value){
+        this.heuristicValue = value;
+    }
+
     public void prune(Node node){
         children.remove(node);// Búsqueda por índice u objeto?
     }

@@ -25,12 +25,15 @@ public class GameTree {
 
     public ArrayList<Node> generateMoves(Board board, int player) {
         ArrayList<Node> moves = new ArrayList<>();
+        Node toAdd;
 
         for(int i=0; i < Constants.boardSize ; i++){
             for(int j=0; j < Constants.boardSize ; j++){
                 if (board.checkSpace(i,j)!=0)
                     break;
-                moves.add(new Node(i,j,player));
+                toAdd = new Node(i,j,player);
+                toAdd.setHeuristicValue(Model.ponderHeuristicValue(board));
+                moves.add(toAdd);
             }
         }
         return moves;
