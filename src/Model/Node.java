@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *  The AI's quality is determined by how deep the Game Tree is able
@@ -8,8 +9,10 @@ import java.util.ArrayList;
  *  each Node we store only the movement information, represented
  *  by two ints and a boolean value.
  */
-public class Node {
+public class Node implements Comparable<Node>{
+    // xPos,yPos = -1 represents a pass
     private ArrayList<Node> children;
+
     private int player;
     private int xPos;
     private int yPos;
@@ -21,8 +24,8 @@ public class Node {
         this.player = player;
     }
 
-    public void addChild(int xPos, int yPos, int player){
-        children.add(new Node(xPos,yPos,player));
+    public void setChildren(ArrayList<Node> children){
+        this.children = children;
     }
 
     public void setHeuristicValue(int value){
@@ -31,5 +34,37 @@ public class Node {
 
     public void prune(Node node){
         children.remove(node);// Búsqueda por índice u objeto?
+    }
+
+    @Override
+    public int compareTo(Node node) {
+        if (node==null)
+            return 1;
+        return this.heuristicValue-node.heuristicValue;
+    }
+
+    public int getPlayer() {
+        return player;
+    }
+
+    public int getyPos() {
+        return yPos;
+    }
+
+    public int getxPos() {
+        return xPos;
+    }
+
+    public void setxPos(int xPos) {
+        this.xPos = xPos;
+    }
+
+    public void setyPos(int yPos) {
+        this.yPos = yPos;
+    }
+
+    public int getHeuristicValue() {
+
+        return heuristicValue;
     }
 }

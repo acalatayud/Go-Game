@@ -32,25 +32,40 @@ public class Board {
         }
     }
 
-    private HashSet<Piece> playerPieces;
-    private HashSet<Piece> aiPieces;
+    private HashSet<Piece> player1Pieces;
+    private HashSet<Piece> player2Pieces;
     int player1Captures;
     int player2Captures;
     private int[][] board = new int[Constants.boardSize][Constants.boardSize];
 
     public Board(){
-        playerPieces = new HashSet<>();
-        aiPieces = new HashSet<>();
+        player1Pieces = new HashSet<>();
+        player2Pieces = new HashSet<>();
         player1Captures=0;
         player2Captures=0;
+    }
+
+    public Board duplicate(){
+        Board newBoard = new Board();
+        newBoard.board = this.board;
+        newBoard.player1Captures = this.player1Captures;
+        newBoard.player2Captures = this.player2Captures;
+        newBoard.player1Pieces = this.player1Pieces;
+        newBoard.player2Pieces = this.player2Pieces;
+        return newBoard;
     }
 
     public boolean addPiece(int xPos, int yPos, int player){
         if (board[yPos][xPos]!=0)
             return false;
         else{
+            if(player==1)
+                player1Pieces.add(new Piece(xPos,yPos,player));
+            else
+                player2Pieces.add(new Piece(xPos,yPos,player));
+
             board[yPos][xPos]=player;
-            playerPieces.add(new Piece(xPos,yPos,player));
+
             return true;
         }
     }
@@ -60,15 +75,15 @@ public class Board {
     }
 
     public int playerPiecesCardinal(){
-        return playerPieces.size();
+        return player1Pieces.size();
     }
 
-    public int aiPiecesCardinal(){
-        return aiPieces.size();
+    public int player2PiecesCardinal(){
+        return player2Pieces.size();
     }
 
     public boolean gameFinished(){
-        if (playerPieces.size()+aiPieces.size()== Constants.boardSize*Constants.boardSize)
+        if (player1Pieces.size()+player2Pieces.size()== Constants.boardSize*Constants.boardSize)
             return true;
         // Faltan casos
         return false;
