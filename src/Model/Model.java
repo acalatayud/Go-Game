@@ -55,7 +55,7 @@ public class Model {
         return new Board();//dummy para q compile
     }
 
-    public void gameLoop(int playerTurn, Board board){
+    public void gameLoop(Board board, int playerTurn, boolean dotTreeMode){
         while(!board.gameFinished()){
             switch(playerTurn){
                 case 1:
@@ -74,5 +74,9 @@ public class Model {
         }
         int winner = board.calculateWinner();
         // Mandar por pantalla el ganador
+    }
+
+    public void executeFileMode(Board board, int player){
+
     }
 }

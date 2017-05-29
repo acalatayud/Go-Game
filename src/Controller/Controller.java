@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import Model.Board;
+import Model.Model;
 import Service.Constants;
 
 /**
@@ -16,13 +17,17 @@ import Service.Constants;
  */
 public class Controller {
 	public static void main(String[] args){
+		int visual;
+		int file;
+		int playerN;
+		int tree;
 		ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
 		try {
 			if (argsList.size() < 3)
 				throw new IllegalArgumentException();
 			else {
-				int visual = argsList.indexOf("-visual");
-				int file = argsList.indexOf("-file");
+				visual = argsList.indexOf("-visual");
+				file = argsList.indexOf("-file");
 
 				if ((visual == -1 && file == -1) || (visual != -1 && file != -1)) {
 					throw new IllegalArgumentException();
@@ -39,7 +44,7 @@ public class Controller {
 				}
 
 				int player = argsList.indexOf("-player");
-				int playerN=0;
+				playerN=0;
 
 				if ((player != -1 && file == -1) || (file != -1 && player == -1)){
 					throw new IllegalArgumentException();
@@ -86,7 +91,7 @@ public class Controller {
 				}
 
 				int prune = argsList.indexOf("-prune");
-				int tree = argsList.indexOf("-tree");
+				tree = argsList.indexOf("-tree");
 
 				if (prune!=-1)
 					Constants.prune = true;
@@ -103,6 +108,7 @@ public class Controller {
 			System.out.println("Invalid file\n");
 			return;
 		}
+
 		// Parsed values:
 		//     visual : -1 is false, !=-1 is true
 		//     file : -1 is false, !=-1 is true
@@ -112,7 +118,15 @@ public class Controller {
 		//     prune : Saved in constants
 		//     tree : -1 is false, !=-1 is true
 
-		//Call gameLoop or file functions
+		Model model = new Model();
+		Board board = new Board();
+
+		if (visual == 1)
+			model.gameLoop(board,playerN,tree==1);
+		else{
+			model.executeFileMode(board,playerN);
+		}
+
 
 	}
     public static Board waitForPlayerMove(Board board){
