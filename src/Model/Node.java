@@ -10,19 +10,19 @@ import java.util.ArrayList;
  */
 public class Node {
     private ArrayList<Node> children;
-    private boolean isPlayer;
+    private int player;
     private int xPos;
     private int yPos;
     private int heuristicValue;
 
-    public Node(int xPos, int yPos, boolean isPlayer){
+    public Node(int xPos, int yPos, int player){
         this.xPos = xPos;
         this.yPos = yPos;
-        this.isPlayer = isPlayer;
+        this.player = player;
     }
 
-    public void addChild(int xPos, int yPos, boolean isPlayer){
-        children.add(new Node(xPos,yPos,isPlayer));
+    public void addChild(int xPos, int yPos, int player){
+        children.add(new Node(xPos,yPos,player));
     }
 
     public void prune(Node node){
