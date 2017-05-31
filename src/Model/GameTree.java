@@ -34,12 +34,12 @@ public class GameTree {
 
         int upNext = player == 1 ? 2 : 1;
 
-        ArrayList<Node> children = new ArrayList<>();
         current.setChildren(generateMoves(board, player));
+        ArrayList<Node> children = current.getChildren();
 
         Board boardNew;
 
-        for (Node node : children) {
+        for (Node node : children ) {
             boardNew = board.duplicate();
             boardNew.addPiece(node.getxPos(), node.getyPos(), node.getPlayer());
             depthNoPrune(boardNew, node, upNext, depth - 1);

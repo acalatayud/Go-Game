@@ -28,6 +28,10 @@ public class Node implements Comparable<Node>{
         this.children = children;
     }
 
+    public ArrayList<Node> getChildren() {
+        return children;
+    }
+
     public void setHeuristicValue(int value){
         this.heuristicValue = value;
     }
