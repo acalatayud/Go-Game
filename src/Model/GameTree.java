@@ -17,21 +17,17 @@ public class GameTree {
         this.isDepth = isDepth;
     }
 
-    public boolean maxReached(int depth){
-        return false;
-    }
-
     /**
      * Construye el árbol y retorna el Node representando
      * la mejor jugada encontrada,
      * @return Node
      */
     private Node buildTree(Board board, int upNext){
-        return buildTreeRecursive(board, new Node(-1,-1,upNext),upNext, 0);
+        return depthNoPrune(board, new Node(-1,-1,upNext),upNext, 0);
     }
 
-    private Node buildTreeRecursive(Board board, Node current, int player, int depth) {
-        if (maxReached(depth)) {
+    private Node depthNoPrune(Board board, Node current, int player, int depth) {
+        if (depth==0) {
             current.setHeuristicValue(Model.ponderHeuristicValue(board, player));
             return current;
         }
@@ -46,10 +42,11 @@ public class GameTree {
         for (Node node : children) {
             boardNew = board.duplicate();
             boardNew.addPiece(node.getxPos(), node.getyPos(), node.getPlayer());
-            buildTreeRecursive(boardNew, node, upNext, depth + 1);
+            depthNoPrune(boardNew, node, upNext, depth - 1);
         }
 
         Node best = depth % 2 == 1 ? Collections.max(children) : Collections.min(children);
+        current.setHeuristicValue(best.getHeuristicValue());
         return best;
     }
 
