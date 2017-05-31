@@ -53,18 +53,30 @@ public class Model {
 
     public Board getAIMove(Board board){
         return new Board();//dummy para q compile
+        
+        //cuando el AI pasa devuelve null
     }
 
     public void gameLoop(Board board, int playerTurn, boolean dotTreeMode){
+        Board auxBoard = new Board();
+        
         while(!board.gameFinished()){
             switch(playerTurn){
                 case 1:
-                    board = waitForPlayerMove(board);
+                    auxBoard = waitForPlayerMove(board);
+                    if(auxBoard == null)
+                        board.pass(playerTurn);
+                    else
+                        board = auxBoard;
                     //actualizar por pantalla tablero
                     playerTurn = 2;
                     break;
                 case 2:
-                    board = getAIMove(board);
+                    auxBoard = getAIMove(board);
+                    if(auxBoard == null)
+                        board.pass(playerTurn);
+                    else
+                        board = auxBoard;
                     //actualizar por pantalla tablero
                     playerTurn = 1;
                     break;

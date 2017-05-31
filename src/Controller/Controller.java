@@ -131,6 +131,8 @@ public class Controller {
 	}
     public static Board waitForPlayerMove(Board board){
         return new Board();//dummy para q compile
+        
+        // cuando el jugador pasa devuelve null
     }
 
     public static Board readBoard(File file){

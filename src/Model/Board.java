@@ -37,12 +37,16 @@ public class Board {
     int player1Captures;
     int player2Captures;
     private int[][] board = new int[Constants.boardSize][Constants.boardSize];
+    private boolean passPlayer1;
+    private boolean passPlayer2;
 
     public Board(){
         player1Pieces = new HashSet<>();
         player2Pieces = new HashSet<>();
         player1Captures=0;
         player2Captures=0;
+        passPlayer1 = false;
+        passPlayer2 = false;
     }
 
     public Board duplicate(){
@@ -52,6 +56,8 @@ public class Board {
         newBoard.player2Captures = this.player2Captures;
         newBoard.player1Pieces = this.player1Pieces;
         newBoard.player2Pieces = this.player2Pieces;
+        newBoard.passPlayer1 = this.passPlayer1;
+        newBoard.passPlayer2 = this.passPlayer2;
         return newBoard;
     }
 
@@ -81,12 +87,19 @@ public class Board {
     public int player2PiecesCardinal(){
         return player2Pieces.size();
     }
-
+    
+    public void pass(int playerTurn){
+        if(playerTurn == 1)
+            passPlayer1 = true;
+        else
+            passPlayer2 = true;
+    }
+    
     public boolean gameFinished(){
         if (player1Pieces.size()+player2Pieces.size()== Constants.boardSize*Constants.boardSize)
             return true;
-        // Faltan casos
-        return false;
+        
+        return passPlayer1 && passPlayer2;
     }
 
     /**
