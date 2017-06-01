@@ -150,7 +150,7 @@ public class Controller {
     			}
     			else {
     				if(c != ' ')
-    					board.addPiece(xPos, yPos, c);
+    					board.addPiece(xPos, yPos, c-'0');
     				xPos++;
     			}
     		}
