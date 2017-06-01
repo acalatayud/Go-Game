@@ -13,7 +13,7 @@ import java.util.HashSet;
  *     2 representing a position held by the AI
  */
 public class Board {
-    private static class Piece{
+    /*private static class Piece{
         private int player;
         private Integer xPos;
         private Integer yPos;
@@ -30,76 +30,130 @@ public class Board {
             result = 31 * result + yPos.hashCode();
             return result;
         }
-    }
+    }*/
 
-    private HashSet<Piece> player1Pieces;
-    private HashSet<Piece> player2Pieces;
-    int player1Captures;
-    int player2Captures;
-    private int[][] board = new int[Constants.boardSize][Constants.boardSize];
-    private boolean passPlayer1;
-    private boolean passPlayer2;
+    private ArrayList<HashSet<Stone>> playerPieces;
+    private int[] playerCaptures = new int[2];
+    private Stone[][] board = new Stone[Constants.boardSize][Constants.boardSize];
+    private boolean[] playerPassed = new boolean[2];
 
     public Board(){
-        player1Pieces = new HashSet<>();
-        player2Pieces = new HashSet<>();
-        player1Captures=0;
-        player2Captures=0;
-        passPlayer1 = false;
-        passPlayer2 = false;
+        playerPieces = new ArrayList<>(2);
+        playerPieces.add(new HashSet<Stone>());
+        playerPieces.add(new HashSet<Stone>());
+        playerCaptures[0] = 0;
+        playerCaptures[1] = 0;
+        playerPassed[0] = false;
+        playerPassed[1] = false;
     }
-
+    //Este duplicate no sirve para el minimax, hay que clonar todas las piezas
     public Board duplicate(){
         Board newBoard = new Board();
-        newBoard.board = this.board;
-        newBoard.player1Captures = this.player1Captures;
-        newBoard.player2Captures = this.player2Captures;
-        newBoard.player1Pieces = this.player1Pieces;
-        newBoard.player2Pieces = this.player2Pieces;
-        newBoard.passPlayer1 = this.passPlayer1;
-        newBoard.passPlayer2 = this.passPlayer2;
+        newBoard.board = board.clone();
+        newBoard.playerCaptures = playerCaptures.clone();
+        newBoard.playerPieces = (ArrayList<HashSet<Stone>>) playerPieces.clone();
+        newBoard.playerPassed = playerPassed.clone();
         return newBoard;
     }
 
-    public boolean addPiece(int xPos, int yPos, int player){
-        if (board[yPos][xPos]!=0)
+    public boolean addPiece(int x, int y, int player){
+        if (outOfBounds(x, y) || board[y][x]!= null || violatesSuicide(x, y, player) || violatesKo(x, y, player))
             return false;
         else{
-            if(player==1)
-                player1Pieces.add(new Piece(xPos,yPos,player));
-            else
-                player2Pieces.add(new Piece(xPos,yPos,player));
+            int liberties = 4;
+            HashSet<Chain> samePlayerChains = new HashSet<>(4);
+            Stone neighbor = null;
+            ArrayList<Stone> capturedStones;
+            if(x > 0 && (neighbor = board[y][x-1]) != null) {   //TODO: Modularizar
+                liberties--;                                    //En violateSuicide se deberian recorrer los 4 neighbors
+                if(neighbor.getPlayer() == player)              //Podriamos hacerlo mas eficiente si obtenemos los neghibors
+                    samePlayerChains.add(neighbor.getChain());  //una sola vez para evitar chequear dos veces las condiciones
+                else {
+                    capturedStones = neighbor.decLiberties();
+                    if(capturedStones != null) {
+                        for(Stone stone : capturedStones)
+                            board[stone.getY()][stone.getX()] = null;
+                    }
+                }
+            }
+            if(x < Constants.boardSize - 1 && (neighbor = board[y][x+1]) != null) {
+                liberties--;
+                if(neighbor.getPlayer() == player)
+                    samePlayerChains.add(neighbor.getChain());
+                else {
+                    capturedStones = neighbor.decLiberties();
+                    if(capturedStones != null) {
+                        for(Stone stone : capturedStones)
+                            board[stone.getY()][stone.getX()] = null;
+                    }
+                }
+            }
+            if(y > 0 && (neighbor = board[y-1][x]) != null) {
+                liberties--;
+                if(neighbor.getPlayer() == player)
+                    samePlayerChains.add(neighbor.getChain());
+                else {
+                    capturedStones = neighbor.decLiberties();
+                    if(capturedStones != null) {
+                        for(Stone stone : capturedStones)
+                            board[stone.getY()][stone.getX()] = null;
+                    }
+                }
+            }
+            if(y < Constants.boardSize - 1 && (neighbor = board[y+1][x]) != null) {
+                liberties--;
+                if(neighbor.getPlayer() == player)
+                    samePlayerChains.add(neighbor.getChain());
+                else {
+                    capturedStones = neighbor.decLiberties();
+                    if(capturedStones != null) {
+                        for(Stone stone : capturedStones)
+                            board[stone.getY()][stone.getX()] = null;
+                    }
+                }
+            }
 
-            board[yPos][xPos]=player;
+            Chain newChain = new Chain();
+            for(Chain chain : samePlayerChains) {
+                newChain.join(chain);
+            }
+
+            Stone stone = new Stone((byte)x, (byte)y, (byte)player, (byte)liberties, newChain);
+            board[y][x] = stone;
 
             return true;
         }
     }
 
+    public boolean outOfBounds(int x, int y) {
+        return x < 0 || x >= Constants.boardSize || y < 0 || y >= Constants.boardSize;
+    }
+
+    public boolean violatesSuicide(int x, int y, int player) {
+        return false;
+    }
+
+    public boolean violatesKo(int x, int y, int player) {
+        return false;
+    }
+
     public int checkSpace(int xPos, int yPos){
-        return board[yPos][xPos];
+        return board[yPos][xPos] == null ? 0 : board[yPos][xPos].getPlayer();
     }
 
-    public int playerPiecesCardinal(){
-        return player1Pieces.size();
-    }
-
-    public int player2PiecesCardinal(){
-        return player2Pieces.size();
+    public int playerPiecesCardinal(int player){
+        return playerPieces.get(player-1).size();
     }
     
-    public void pass(int playerTurn){
-        if(playerTurn == 1)
-            passPlayer1 = true;
-        else
-            passPlayer2 = true;
+    public void pass(int player){
+        playerPassed[player-1] = true; //TODO: Resetear si en el turno siguiente no pasa
     }
     
     public boolean gameFinished(){
-        if (player1Pieces.size()+player2Pieces.size()== Constants.boardSize*Constants.boardSize)
+        if (playerPieces.get(0).size()+playerPieces.get(1).size() == Constants.boardSize*Constants.boardSize)
             return true;
         
-        return passPlayer1 && passPlayer2;
+        return playerPassed[0] && playerPassed[1];
     }
 
     /**
@@ -197,7 +251,7 @@ public class Board {
     public int calculateWinner(){
         int[] territory = calculateTerritory(this);
         int winner;
-        if ( (winner = territory[0]+this.player1Captures - (territory[1]+this.player2Captures)) == 0)
+        if ( (winner = territory[0]+playerCaptures[0] - (territory[1]+playerCaptures[1])) == 0)
             return winner;
 
         return winner > 0 ? 1 : 2;

@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Lucas on 26/05/2017.
  */
@@ -28,7 +30,7 @@ public class Stone {
     }
 
     /**Returns amount of captured stones**/
-    public int decLiberties() {
+    public ArrayList<Stone> decLiberties() {
         liberties--;
         return chain.updateLiberties(-1);
     }
@@ -42,12 +44,24 @@ public class Stone {
         return liberties;
     }
 
+    public byte getPlayer() {
+        return player;
+    }
+
     public Chain getChain() {
         return chain;
     }
 
     public void setChain(Chain chain) {
         this.chain = chain;
+    }
+
+    public byte getX() {
+        return x;
+    }
+
+    public byte getY() {
+        return y;
     }
 
     public boolean isImmortal() {

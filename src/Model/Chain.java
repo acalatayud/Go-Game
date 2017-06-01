@@ -13,6 +13,7 @@ public class Chain {
     public Chain() {
         stones = new ArrayList<>();
         liberties = 0;
+        immortal = false;
     }
 
     public void addStone(Stone stone) {
@@ -21,15 +22,15 @@ public class Chain {
     }
 
     /**Returns amount of captured stones**/
-    public int updateLiberties(int diff) {
+    public ArrayList<Stone> updateLiberties(int diff) {
         liberties += diff;
         if(liberties == 0) {
-            int chainSize = stones.size();
+            ArrayList<Stone> tmpStones = stones;
             kill();
-            return chainSize;
+            return tmpStones;
         }
         else
-            return 0;
+            return null;
     }
 
     private void kill() {
@@ -56,6 +57,8 @@ public class Chain {
             }
             stones.addAll(otherStones);
             liberties += other.getLiberties();
+            if(other.immortal)
+                immortal = true;
         }
         return this;
     }
