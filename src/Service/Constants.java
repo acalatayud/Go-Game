@@ -8,4 +8,6 @@ public class Constants {
     public static int maxTime=5; // Expressed in seconds
     public static int depth=10;
     public static boolean prune=false;
+    public static final int worstValue = -999999999;
+    public static final int bestValue = +999999999;
 }

@@ -26,8 +26,13 @@ public class GameTree {
         return depthNoPrune(board, new Node(-1,-1,upNext),upNext, 0);
     }
 
+    private Node depthWithPune(Board board, Node node, int depth, int alfa, int beta, int player){
+        return new Node(2,3,4);
+    }
+
     private Node depthNoPrune(Board board, Node current, int player, int depth) {
-        if (depth==0) {
+        ArrayList<Node> moves = generateMoves(board,player);
+        if (depth==0 || (moves.size()==1)) { // If depth reached or is terminal node (only possibility is pass)
             current.setHeuristicValue(Model.ponderHeuristicValue(board, player));
             return current;
         }
