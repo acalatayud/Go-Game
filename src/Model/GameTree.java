@@ -27,7 +27,7 @@ public class GameTree {
     public Node buildTree(Board board){
         if (Constants.prune){
             if (Constants.depth != -1){
-                return depthWithPune(board,new Node(-1,-1,player),Constants.depth,Constants.worstValue,Constants.bestValue,player);
+                return depthWithPrune(board,new Node(-1,-1,player),Constants.depth,Constants.worstValue,Constants.bestValue,player);
             }
             else {
                 return null; // return timeWithPrune()
@@ -44,7 +44,7 @@ public class GameTree {
         }
     }
 
-    private Node depthWithPune(Board board, Node node, int depth, int alpha, int beta, int player){
+    private Node depthWithPrune(Board board, Node node, int depth, int alpha, int beta, int player){
         ArrayList<Node> children = generateMoves(board,player);
         if(depth==0||(children.size()==1)){
             node.setHeuristicValue(Model.ponderHeuristicValue(board,this.player));
@@ -58,7 +58,7 @@ public class GameTree {
         if (player==this.player){ // Maximizing
             node.setHeuristicValue(Constants.worstValue);
             for (Node child : children){
-                node.setHeuristicValue(Math.max(node.getHeuristicValue(),depthWithPune(boardNew,child,depth-1,alpha,beta,upNext).getHeuristicValue()));
+                node.setHeuristicValue(Math.max(node.getHeuristicValue(),depthWithPrune(boardNew,child,depth-1,alpha,beta,upNext).getHeuristicValue()));
                 alpha = Math.max(alpha,node.getHeuristicValue());
                 if (beta<=alpha)
                     break;
@@ -67,7 +67,7 @@ public class GameTree {
         else{ // Minimizing
             node.setHeuristicValue(Constants.bestValue);
             for(Node child : children){
-                node.setHeuristicValue(Math.min(node.getHeuristicValue(),depthWithPune(boardNew,child,depth-1,alpha,beta,upNext).getHeuristicValue()));
+                node.setHeuristicValue(Math.min(node.getHeuristicValue(),depthWithPrune(boardNew,child,depth-1,alpha,beta,upNext).getHeuristicValue()));
                 beta = Math.min(beta, node.getHeuristicValue());
                 if (beta<=alpha)
                     break;
