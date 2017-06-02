@@ -52,9 +52,13 @@ public class Model {
     }
 
     public Board getAIMove(Board board){
-        return new Board();//dummy para q compile
-        
-        //cuando el AI pasa devuelve null
+        GameTree tree = new GameTree(board);
+        Node move = tree.buildTree(board,2);
+        if(move.getxPos()==-1&&move.getyPos()==-1)
+            return null;
+
+        board.addPiece(move.getxPos(),move.getyPos(),2);
+        return board;
     }
 
     public void gameLoop(Board board, int playerTurn, boolean dotTreeMode){

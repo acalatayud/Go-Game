@@ -12,11 +12,9 @@ import static Service.Constants.depth;
  */
 public class GameTree {
     private Board board;
-    private boolean isDepth;
 
-    public GameTree(Board board, boolean isDepth){
+    public GameTree(Board board){
         this.board = board;
-        this.isDepth = isDepth;
     }
 
     /**
@@ -24,7 +22,7 @@ public class GameTree {
      * la mejor jugada encontrada,
      * @return Node
      */
-    private Node buildTree(Board board, int upNext){
+    public Node buildTree(Board board, int upNext){
         if (Constants.prune){
             if (Constants.depth != -1){
                 return depthWithPune(board,new Node(-1,-1,2),Constants.depth,Constants.worstValue,Constants.bestValue,2);
