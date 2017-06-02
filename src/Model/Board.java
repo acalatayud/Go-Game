@@ -118,24 +118,34 @@ public class Board {
     }
 
     public boolean violatesSuicide(int x, int y, int player) {
-        Board mockBoard = new Board(); // 0 is unvisited, 1 is visited
-
-        // First array: 0 is out of board, 1 is player 1, 2 is player 2
-        ArrayList<ArrayList<Integer>> borders = new ArrayList<>();
-        borders.add(new ArrayList<Integer>());
-        borders.add(new ArrayList<Integer>());// Second array necessary for floodFill
-
         boolean player1=false;
         boolean player2=false;
+        Stone neighbor=null;
 
-        floodFill(mockBoard,this,x,y,borders);
-
-        for(Integer space : borders.get(0)){
-            if(player1&&player2)
-                break;
-            if(space==1)
+        for(int i=0; i<4 ; i++){
+            switch(i){
+                case 0:
+                    if(!(x > 0 && (neighbor = board[y][x-1]) != null))
+                        continue;
+                    break;
+                case 1:
+                    if(!(x < Constants.boardSize - 1 && (neighbor = board[y][x+1]) != null))
+                        continue;
+                    break;
+                case 2:
+                    if(!(y > 0 && (neighbor = board[y-1][x]) != null))
+                        continue;
+                    break;
+                case 3:
+                    if(!(y < Constants.boardSize - 1 && (neighbor = board[y+1][x]) != null))
+                        continue;
+                    break;
+                default:
+                    break;
+            }
+            if(neighbor.getPlayer()==1)
                 player1=true;
-            if(space==2)
+            if(neighbor.getPlayer()==2)
                 player2=true;
         }
 
