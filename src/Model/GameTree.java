@@ -5,6 +5,8 @@ import Service.Constants;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static Service.Constants.depth;
+
 /**
  *  Header structure for the Game Tree
  */
@@ -23,7 +25,23 @@ public class GameTree {
      * @return Node
      */
     private Node buildTree(Board board, int upNext){
-        return depthNoPrune(board, new Node(-1,-1,upNext),upNext, 0);
+        if (Constants.prune){
+            if (Constants.depth != -1){
+                return depthWithPune(board,new Node(-1,-1,2),Constants.depth,Constants.worstValue,Constants.bestValue,2);
+            }
+            else {
+                return null; // return timeWithPrune()
+            }
+
+        }
+        else {
+            if (Constants.depth != -1){
+                return depthNoPrune(board,new Node(-1,-1,2),2,Constants.depth);
+            }
+            else {
+                return null; // return timeNoPrune()
+            }
+        }
     }
 
     private Node depthWithPune(Board board, Node node, int depth, int alpha, int beta, int player){
@@ -32,11 +50,13 @@ public class GameTree {
             node.setHeuristicValue(Model.ponderHeuristicValue(board,player));
             return node;
         }
+        Board boardNew = board.duplicate();
+        boardNew.addPiece(node.getxPos(), node.getyPos(), player);
 
         if (player==2){ // Maximizing
             node.setHeuristicValue(Constants.worstValue);
             for (Node child : children){
-                node.setHeuristicValue(Math.max(node.getHeuristicValue(),depthWithPune(board,child,depth-1,alpha,beta,1).getHeuristicValue()));
+                node.setHeuristicValue(Math.max(node.getHeuristicValue(),depthWithPune(boardNew,child,depth-1,alpha,beta,1).getHeuristicValue()));
                 alpha = Math.max(alpha,node.getHeuristicValue());
                 if (beta<=alpha)
                     break;
@@ -45,7 +65,7 @@ public class GameTree {
         else{ // Minimizing
             node.setHeuristicValue(Constants.bestValue);
             for(Node child : children){
-                node.setHeuristicValue(Math.min(node.getHeuristicValue(),depthWithPune(board,child,depth-1,alpha,beta,2).getHeuristicValue()));
+                node.setHeuristicValue(Math.min(node.getHeuristicValue(),depthWithPune(boardNew,child,depth-1,alpha,beta,2).getHeuristicValue()));
                 beta = Math.min(beta, node.getHeuristicValue());
                 if (beta<=alpha)
                     break;

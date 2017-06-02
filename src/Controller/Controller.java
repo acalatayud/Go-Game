@@ -73,6 +73,8 @@ public class Controller {
 				if(maxtime!=-1){
 					try {
 						maxtimeN = Integer.parseInt(argsList.get(maxtime + 1));
+						if (maxtimeN<=0)
+							throw new NumberFormatException();
 						Constants.maxTime = maxtimeN;
 					}
 					catch (NumberFormatException e){
@@ -83,6 +85,8 @@ public class Controller {
 				if(depth!=-1){
 					try {
 						depthN = Integer.parseInt(argsList.get(depth + 1));
+						if(depthN<=0)
+							throw new NumberFormatException();
 						Constants.depth = depthN;
 					}
 					catch (NumberFormatException e){
