@@ -151,7 +151,7 @@ public class Board {
                 player2=true;
         }
 
-        return player1&&player2;
+        return player==1?(!player1&&player2):(player1&&!player2);
     }
 
     public boolean violatesKo(int x, int y, int player) {
