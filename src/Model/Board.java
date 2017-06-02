@@ -165,15 +165,15 @@ public class Board {
     public int playerPiecesCardinal(int player){
         return playerPieces.get(player-1).size();
     }
-    
+
     public void pass(int player){
         playerPassed[player-1] = true; //TODO: Resetear si en el turno siguiente no pasa
     }
-    
+
     public boolean gameFinished(){
         if (playerPieces.get(0).size()+playerPieces.get(1).size() == Constants.boardSize*Constants.boardSize)
             return true;
-        
+
         return playerPassed[0] && playerPassed[1];
     }
 
@@ -284,7 +284,7 @@ public class Board {
         for(int i=0;i<13;i++){
             ans+= "[";
             for(int j=0;j<13;j++){
-                ans+=this.checkSpace(i,j);
+                ans+=this.checkSpace(j,i);
                 ans+="   ";
             }
             ans+= "]\n";

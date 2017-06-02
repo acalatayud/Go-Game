@@ -71,4 +71,11 @@ public class Node implements Comparable<Node>{
 
         return heuristicValue;
     }
+
+    @Override
+    public String toString() {
+        if(xPos == -1 && yPos == -1)
+            return "PASS";
+        return "(" + xPos +", " + yPos +")";
+    }
 }

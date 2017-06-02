@@ -52,8 +52,8 @@ public class Model {
     }
 
     public Board getAIMove(Board board){
-        GameTree tree = new GameTree(board);
-        Node move = tree.buildTree(board,2);
+        GameTree tree = new GameTree(board,2);
+        Node move = tree.buildTree(board);
         if(move.getxPos()==-1&&move.getyPos()==-1)
             return null;
 
@@ -61,7 +61,7 @@ public class Model {
         return board;
     }
 
-    public void gameLoop(Board board, int playerTurn, boolean dotTreeMode){
+    public void gameLoop(Board board, int playerTurn){
         Board auxBoard = new Board();
         
         while(!board.gameFinished()){
@@ -93,6 +93,8 @@ public class Model {
     }
 
     public void executeFileMode(Board board, int player){
-
+        GameTree tree = new GameTree(board,player);
+        Node move = tree.buildTree(board);
+        System.out.println(move);
     }
 }

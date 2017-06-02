@@ -100,8 +100,8 @@ public class Controller {
 				if (prune!=-1)
 					Constants.prune = true;
 
-				if(tree!=-1)
-					tree=1;
+				if(tree!=-1 && file!=1)
+					Constants.dotTree = true;
 			}
 		}
 		catch (IllegalArgumentException e){
@@ -126,7 +126,7 @@ public class Controller {
 		Board board = new Board();
 
 		if (visual == 1)
-			model.gameLoop(board,playerN,tree==1);
+			model.gameLoop(board,playerN);
 		else{
 			model.executeFileMode(board,playerN);
 		}
