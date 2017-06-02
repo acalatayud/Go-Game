@@ -64,43 +64,31 @@ public class Board {
             HashSet<Chain> samePlayerChains = new HashSet<>(4);
             Stone neighbor = null;
             ArrayList<Stone> capturedStones;
-            if(x > 0 && (neighbor = board[y][x-1]) != null) {   //TODO: Modularizar
-                liberties--;                                    //En violateSuicide se deberian recorrer los 4 neighbors
-                if(neighbor.getPlayer() == player)              //Podriamos hacerlo mas eficiente si obtenemos los neghibors
-                    samePlayerChains.add(neighbor.getChain());  //una sola vez para evitar chequear dos veces las condiciones
-                else {
-                    capturedStones = neighbor.decLiberties();
-                    if(capturedStones != null) {
-                        for(Stone stone : capturedStones)
-                            board[stone.getY()][stone.getX()] = null;
-                    }
+            //TODO: Modularizar
+            //En violateSuicide se deberian recorrer los 4 neighbors
+            //Podriamos hacerlo mas eficiente si obtenemos los neghibors
+            //una sola vez para evitar chequear dos veces las condiciones
+            for(int i=0; i<4 ; i++){
+                switch(i){
+                    case 0:
+                        if(!(x > 0 && (neighbor = board[y][x-1]) != null))
+                            continue;
+                        break;
+                    case 1:
+                        if(!(x < Constants.boardSize - 1 && (neighbor = board[y][x+1]) != null))
+                            continue;
+                        break;
+                    case 2:
+                        if(!(y > 0 && (neighbor = board[y-1][x]) != null))
+                            continue;
+                        break;
+                    case 3:
+                        if(!(y < Constants.boardSize - 1 && (neighbor = board[y+1][x]) != null))
+                            continue;
+                        break;
+                    default:
+                        break;
                 }
-            }
-            if(x < Constants.boardSize - 1 && (neighbor = board[y][x+1]) != null) {
-                liberties--;
-                if(neighbor.getPlayer() == player)
-                    samePlayerChains.add(neighbor.getChain());
-                else {
-                    capturedStones = neighbor.decLiberties();
-                    if(capturedStones != null) {
-                        for(Stone stone : capturedStones)
-                            board[stone.getY()][stone.getX()] = null;
-                    }
-                }
-            }
-            if(y > 0 && (neighbor = board[y-1][x]) != null) {
-                liberties--;
-                if(neighbor.getPlayer() == player)
-                    samePlayerChains.add(neighbor.getChain());
-                else {
-                    capturedStones = neighbor.decLiberties();
-                    if(capturedStones != null) {
-                        for(Stone stone : capturedStones)
-                            board[stone.getY()][stone.getX()] = null;
-                    }
-                }
-            }
-            if(y < Constants.boardSize - 1 && (neighbor = board[y+1][x]) != null) {
                 liberties--;
                 if(neighbor.getPlayer() == player)
                     samePlayerChains.add(neighbor.getChain());
