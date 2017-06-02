@@ -130,7 +130,28 @@ public class Board {
     }
 
     public boolean violatesSuicide(int x, int y, int player) {
-        return false;
+        Board mockBoard = new Board(); // 0 is unvisited, 1 is visited
+
+        // First array: 0 is out of board, 1 is player 1, 2 is player 2
+        ArrayList<ArrayList<Integer>> borders = new ArrayList<>();
+        borders.add(new ArrayList<Integer>());
+        borders.add(new ArrayList<Integer>());// Second array necessary for floodFill
+
+        boolean player1=false;
+        boolean player2=false;
+
+        floodFill(mockBoard,this,x,y,borders);
+
+        for(Integer space : borders.get(0)){
+            if(player1&&player2)
+                break;
+            if(space==1)
+                player1=true;
+            if(space==2)
+                player2=true;
+        }
+
+        return player1&&player2;
     }
 
     public boolean violatesKo(int x, int y, int player) {
