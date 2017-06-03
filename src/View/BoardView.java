@@ -24,7 +24,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class BoardView {
-    private boolean clickAvailable;
+    private boolean clickAvailable = true;
     private JFrame frame;
     int playerN;
     ImageIcon blackStone = new ImageIcon("Sources/blackStone20.png");
@@ -240,21 +240,23 @@ public class BoardView {
     /**Button listener which event triggers are handled by the controller.
      * */
     private class ButtonListener implements ActionListener{
-        public void actionPerformed(ActionEvent e){
-            if(e.getSource() == btnPass){
-                Controller.pass();
-                return;
+        public void actionPerformed(ActionEvent e) {
+            if (clickAvailable) {
+                if (e.getSource() == btnPass) {
+                    Controller.pass();
+                    return;
+                }
+                int i = 0;
+                while (e.getSource() != stoneButtons.get(i)) {
+                    i++;
+                }
+                int fil = (int) Math.floor(i / 13);
+                int col = (i - (fil * 13));
+                clickAvailable = false;
+                Controller.placingAttempt(fil, col, playerN);
+                clickAvailable = true;
             }
-            int i = 0;
-            while(e.getSource()!= stoneButtons.get(i)) {
-                i++;
-            }
-            int fil = (int)Math.floor(i/13);
-            int col = (i-(fil*13));
-            clickAvailable = false;
-            Controller.placingAttempt(fil, col, playerN);
-            clickAvailable = true;
-            }
+        }
 
     }
 

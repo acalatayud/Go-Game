@@ -31,7 +31,7 @@ public class Board {
             return result;
         }
     }*/
-    private int playerN;
+    private int playerN = 1;
     private ArrayList<HashSet<Stone>> playerPieces;
     private int[] playerCaptures = new int[2];
     private Stone[][] board = new Stone[Constants.boardSize][Constants.boardSize];
@@ -63,8 +63,10 @@ public class Board {
     }
 
     public boolean addPiece(int x, int y, int player){
-        if (outOfBounds(x, y) || board[y][x]!= null || violatesSuicide(x, y, player) || violatesKo(x, y, player))
+        if (outOfBounds(x, y) || board[y][x]!= null || violatesSuicide(x, y, player) || violatesKo(x, y, player)) {
+            System.out.println("piece could not be added to the model");
             return false;
+        }
         else{
             int liberties = 4;
             HashSet<Chain> samePlayerChains = new HashSet<>(4);
@@ -114,7 +116,7 @@ public class Board {
 
             Stone stone = new Stone((byte)x, (byte)y, (byte)player, (byte)liberties, newChain);
             board[y][x] = stone;
-
+            System.out.println("piece was added to the model");
             return true;
         }
     }

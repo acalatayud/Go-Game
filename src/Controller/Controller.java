@@ -160,7 +160,11 @@ public class Controller {
 	 * @return true if the model validated the placement, false otherwise.
 	 * */
 	public static boolean placingAttempt(int x, int y, int player){
+		System.out.println("reached controller");
+		System.out.println(x);
+		System.out.println(y);
 		if(board.addPiece(x,y,player)) {
+			boardView.setStone(x*13 + y);
 			boardView.nextPlayer();
 			return true;
 		}
