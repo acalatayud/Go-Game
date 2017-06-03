@@ -1,23 +1,15 @@
 package Model;
 
-import Controller.Controller;
 import Service.Constants;
 
 import java.util.ArrayList;
+
+import static Controller.Controller.waitForPlayerMove;
 
 /**
  * Created by juan on 23/05/17.
  */
 public class Model {
-    int playerTurn;
-    Board board;
-
-    public Model(int playerTurn, Board board){
-        this.playerTurn = playerTurn;
-        this.board = board;
-    }
-
-
     public static int ponderHeuristicValue(Board board, int player){//por el momento dejo static
         /**
          * El tema es el siguiente, la catedra pide que hagamos un algoritmo
@@ -69,30 +61,32 @@ public class Model {
         return board;
     }
 
-
-    public void updatePlayer(){
-        if(playerTurn == 1)
-            playerTurn = 2;
-        else
-            playerTurn = 1;
-    }
-    public void gameLoop(){
-        System.out.println("entered the gameloop");
+    public void gameLoop(Board board, int playerTurn){
         Board auxBoard = new Board();
+        
         while(!board.gameFinished()){
-            playerTurn = board.getPlayerN();
-            System.out.println(playerTurn);
-            if(playerTurn == 2){
-                System.out.println("player was changed to 2");
-                auxBoard = getAIMove(board);
-                if(auxBoard == null)
-                    board.pass(playerTurn);
-                else
-                    board = auxBoard;
-                Controller.updateView(board);
-                playerTurn = 1;
+            switch(playerTurn){
+                case 1:
+                    auxBoard = waitForPlayerMove(board);
+                    if(auxBoard == null)
+                        board.pass(playerTurn);
+                    else
+                        board = auxBoard;
+                    //actualizar por pantalla tablero
+                    playerTurn = 2;
+                    break;
+                case 2:
+                    auxBoard = getAIMove(board);
+                    if(auxBoard == null)
+                        board.pass(playerTurn);
+                    else
+                        board = auxBoard;
+                    //actualizar por pantalla tablero
+                    playerTurn = 1;
+                    break;
+                default:
+                    throw new IllegalArgumentException("gameLoop received an illegal playerTurn integer");
             }
-
         }
         int winner = board.calculateWinner();
         // Mandar por pantalla el ganador

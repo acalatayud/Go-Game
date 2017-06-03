@@ -154,7 +154,7 @@ public class BoardView {
 
     /**Auxiliary method to place a board´s stones within the swing environment.
      * */
-    public void placeStones(Board board){
+    private void placeStones(Board board){
         if(board != null) {
             for (Stone[] row : board.getBoard()) {
                 for (Stone s : row) {
