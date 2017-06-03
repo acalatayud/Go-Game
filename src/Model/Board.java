@@ -31,11 +31,17 @@ public class Board {
             return result;
         }
     }*/
-
+    private int playerN;
     private ArrayList<HashSet<Stone>> playerPieces;
     private int[] playerCaptures = new int[2];
     private Stone[][] board = new Stone[Constants.boardSize][Constants.boardSize];
     private boolean[] playerPassed = new boolean[2];
+
+    public Stone[][] getBoard(){
+        return board;
+    }
+    public int getPlayerN(){
+        return playerN;}
 
     public Board(){
         playerPieces = new ArrayList<>(2);

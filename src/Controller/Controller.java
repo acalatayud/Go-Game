@@ -1,5 +1,6 @@
 package Controller;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,16 +12,22 @@ import java.util.Arrays;
 import Model.Board;
 import Model.Model;
 import Service.Constants;
+import View.BoardView;
 
 /**
  * Created by juan on 23/05/17.
  */
 public class Controller {
+	private static Board board;
+	private static Model model;
+	private static BoardView boardView;
+	private static int playerN; // this variable is not updated by all controller functions thus becoming useless after initiation.
+	private static int visual;
+	private static int file;
+	private static int tree;
+
 	public static void main(String[] args){
-		int visual;
-		int file;
-		int playerN;
-		int tree;
+
 		ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
 		try {
 			if (argsList.size() < 3)
@@ -122,17 +129,75 @@ public class Controller {
 		//     prune : Saved in constants
 		//     tree : -1 is false, !=-1 is true
 
-		Model model = new Model();
-		Board board = new Board();
-
+		model = new Model();
+		board = new Board();
+		boardView = new BoardView(board);
 		if (visual == 1)
 			model.gameLoop(board,playerN);
 		else{
 			model.executeFileMode(board,playerN);
 		}
 
+		//initializes the app window.
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					boardView.initFrame();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
 	}
+
+	/**The controller attempts to add a stone to the board. If the model validates the
+	 * attempt it will update both the current player and the view accordingly, if not it will return false.
+	 * @param x the x coordinate where the stone is to be potentially placed.
+	 * @param y the y coordinate where the stone is to be potentially placed.
+	 * @param player the player who is attempting to place the stone.
+	 * @return true if the model validated the placement, false otherwise.
+	 * */
+	public static boolean placingAttempt(int x, int y, int player){
+		if(board.addPiece(x,y,player)) {
+			boardView.nextPlayer();
+			return true;
+		}
+		else
+			return false;
+
+	}
+	/**The controller tells the model that a player has passed and updates the player.
+	 * */
+	public static void pass(){
+		board.pass(playerN);
+		boardView.nextPlayer();
+	}
+
+
+	/**The controller sets a stone of the current player in the x,y coordinates.
+	 * @param x the x coordinate where the stone is to be potentially placed.
+	 * @param y the y coordinate where the stone is to be potentially placed.
+	 * @return true if the stone could be placed, false otherwise.
+	 * */
+	public static boolean placeStone(int x, int y){
+		int index = x*13 +y;
+		return boardView.setStone(index);
+	}
+	/**The controller will attempt to remove a stone from the view.
+	 * @param x the x coordinate where the stone is to be potentially placed.
+	 * @param y the y coordinate where the stone is to be potentially placed.
+	 * @return true if the stone could be removed, false otherwise.
+	 * */
+	public static boolean removeStone(int x, int y){
+		int index = x*13 + y;
+		if( index >= 169 || index <0)
+			throw new IllegalArgumentException("index out of bounds");
+		return boardView.removeStone(x*13 + y);
+	}
+
+	// no se que hace, la deje por las dudas.
     public static Board waitForPlayerMove(Board board){
         return new Board();//dummy para q compile
         
