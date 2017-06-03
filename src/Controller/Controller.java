@@ -132,7 +132,7 @@ public class Controller {
 		model = new Model();
 		board = new Board();
 		boardView = new BoardView(board);
-		if (visual == 1)
+		if (visual != -1)
 			model.gameLoop(board,playerN);
 		else{
 			model.executeFileMode(board,playerN);
