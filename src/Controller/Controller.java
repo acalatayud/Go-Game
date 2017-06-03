@@ -129,16 +129,9 @@ public class Controller {
 		//     prune : Saved in constants
 		//     tree : -1 is false, !=-1 is true
 
-		model = new Model();
 		board = new Board();
 		boardView = new BoardView(board);
-		if (visual != -1) {
-			playerN = 1;
-			model.gameLoop(board, playerN);
-		}
-		else{
-			model.executeFileMode(board,playerN);
-		}
+		model = new Model(board);
 
 		//initializes the app window.
 		EventQueue.invokeLater(new Runnable() {
@@ -151,6 +144,16 @@ public class Controller {
 				}
 			}
 		});
+
+		if (visual != -1) {
+			playerN = 1;
+			model.gameLoop();
+		}
+		else{
+			model.executeFileMode(board,playerN);
+		}
+
+
 
 	}
 
@@ -166,6 +169,7 @@ public class Controller {
 		System.out.println(x);
 		System.out.println(y);
 		if(board.addPiece(x,y,player)) {
+			board.nextPlayer();
 			boardView.setStone(x*13 + y);
 			boardView.nextPlayer();
 			return true;
@@ -174,6 +178,10 @@ public class Controller {
 			return false;
 
 	}
+	public static void updateView(Board board){
+		boardView.placeStones(board);
+	}
+
 	/**The controller tells the model that a player has passed and updates the player.
 	 * */
 	public static void pass(){

@@ -43,6 +43,7 @@ public class Board {
     public int getPlayerN(){
         return playerN;}
 
+
     public Board(){
         playerPieces = new ArrayList<>(2);
         playerPieces.add(new HashSet<Stone>());
@@ -61,7 +62,12 @@ public class Board {
         newBoard.playerPassed = playerPassed.clone();
         return newBoard;
     }
-
+    public void nextPlayer(){
+        if(playerN == 1)
+            playerN = 2;
+        else
+            playerN = 1;
+    }
     public boolean addPiece(int x, int y, int player){
         if (outOfBounds(x, y) || board[y][x]!= null || violatesSuicide(x, y, player) || violatesKo(x, y, player)) {
             System.out.println("piece could not be added to the model");

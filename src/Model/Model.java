@@ -10,6 +10,13 @@ import static Controller.Controller.waitForPlayerMove;
  * Created by juan on 23/05/17.
  */
 public class Model {
+
+    Board board;
+
+
+    public Model(Board board){
+        this.board = board;
+    }
     public static int ponderHeuristicValue(Board board, int player){//por el momento dejo static
         /**
          * El tema es el siguiente, la catedra pide que hagamos un algoritmo
@@ -61,32 +68,24 @@ public class Model {
         return board;
     }
 
-    public void gameLoop(Board board, int playerTurn){
-        Board auxBoard = new Board();
-        
+
+
+    public void gameLoop(){
+
         while(!board.gameFinished()){
-            switch(playerTurn){
-                case 1:
-                    auxBoard = waitForPlayerMove(board);
-                    if(auxBoard == null)
-                        board.pass(playerTurn);
-                    else
-                        board = auxBoard;
-                    //actualizar por pantalla tablero
-                    playerTurn = 2;
-                    break;
-                case 2:
-                    auxBoard = getAIMove(board);
-                    if(auxBoard == null)
-                        board.pass(playerTurn);
-                    else
-                        board = auxBoard;
-                    //actualizar por pantalla tablero
-                    playerTurn = 1;
-                    break;
-                default:
-                    throw new IllegalArgumentException("gameLoop received an illegal playerTurn integer");
+            int playerTurn = board.getPlayerN();
+            System.out.println(playerTurn);
+            if(playerTurn == 2) {
+                Board auxBoard = getAIMove(board);
+                if (auxBoard == null)
+                    board.pass(playerTurn);
+                else
+                    board = auxBoard;
+                //esto probablemente se pueda optimisar
+                Controller.Controller.updateView(board);
+                playerTurn = 1;
             }
+
         }
         int winner = board.calculateWinner();
         // Mandar por pantalla el ganador
