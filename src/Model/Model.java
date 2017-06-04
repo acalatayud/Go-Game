@@ -150,13 +150,13 @@ public class Model {
 
         dilation(5);
 
-        printInfluenceMap();
-        System.out.println("");
-        System.out.println("");
+    //    printInfluenceMap();
+     //   System.out.println("");
+       // System.out.println("");
 
         erosion(21);
 
-        printInfluenceMap();
+        //printInfluenceMap();
 
 
     }
@@ -378,6 +378,7 @@ public class Model {
         System.out.println("getaimove");
         GameTree tree = new GameTree(board,2);
         Node move = tree.buildTree(board);
+        System.out.println("move is:" + move);
         if(move.getxPos()==-1&&move.getyPos()==-1)
             return null;
 
@@ -391,7 +392,7 @@ public class Model {
 
         while(!board.gameFinished()){
             int playerTurn = board.getPlayerN();
-            System.out.println(playerTurn);
+            //System.out.println(playerTurn);
             if(playerTurn == 2) {
                 Board auxBoard = getAIMove(board);
                 if (auxBoard == null)

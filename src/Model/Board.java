@@ -32,8 +32,7 @@ public class Board {
         }
     }*/
     private int playerN = 1;
-    private ArrayList<HashSet<Stone>> playerPieces;
-    private ArrayList<HashSet<Chain>> playerChains;
+    private HashSet<Chain> playerChains;
     private int[] playerCaptures = new int[2];
     private Stone[][] board = new Stone[Constants.boardSize][Constants.boardSize];
     private boolean[] playerPassed = new boolean[2];
@@ -47,12 +46,7 @@ public class Board {
 
 
     public Board(){
-        playerPieces = new ArrayList<>(2);
-        playerPieces.add(new HashSet<Stone>());
-        playerPieces.add(new HashSet<Stone>());
-        playerChains = new ArrayList<>(2);
-        playerChains.add(new HashSet<Chain>());
-        playerChains.add(new HashSet<Chain>());
+        playerChains = new HashSet<Chain>();;
 
         playerCaptures[0] = 0;
         playerCaptures[1] = 0;
@@ -60,24 +54,20 @@ public class Board {
         playerPassed[1] = false;
     }
 
-    public Board duplicate(){
+    public Board duplicate() {
         Board newBoard = new Board();
         newBoard.playerCaptures = playerCaptures.clone();
         newBoard.playerPassed = playerPassed.clone();
         newBoard.playerN = this.playerN;
-        int player=0;
-        for (HashSet<Chain> set : playerChains){
-            player++;
-            for (Chain chain : set){
-                Chain newChain = new Chain();
-                for(Stone stone : chain.getStones()){
-                    Stone newStone = new Stone(stone.getX(),stone.getY(),stone.getPlayer(),stone.getLiberties(),newChain);
-                    newChain.addStone(newStone);
-                    newBoard.playerPieces.get(player).add(newStone);
-                    newBoard.board[stone.getY()][stone.getX()] = newStone;
-                }
-                newBoard.playerChains.get(player).add(newChain);
+
+        for (Chain chain : playerChains) {
+            Chain newChain = new Chain();
+            for (Stone stone : chain.getStones()) {
+                Stone newStone = new Stone(stone.getX(), stone.getY(), stone.getPlayer(), stone.getLiberties(), newChain);
+                newChain.addStone(newStone);
+                newBoard.board[stone.getY()][stone.getX()] = newStone;
             }
+            newBoard.playerChains.add(newChain);
         }
 
         return newBoard;
@@ -202,10 +192,6 @@ public class Board {
         return board[yPos][xPos] == null ? 0 : board[yPos][xPos].getPlayer();
     }
 
-    public int playerPiecesCardinal(int player){
-        return playerPieces.get(player-1).size();
-    }
-
     public int getPlayerCaptures(int player) {
         return playerCaptures[player-1];
     }
@@ -215,8 +201,7 @@ public class Board {
     }
 
     public boolean gameFinished(){
-        if (playerPieces.get(0).size()+playerPieces.get(1).size() == Constants.boardSize*Constants.boardSize)
-            return true;
+        //falta game finished
 
         return playerPassed[0] && playerPassed[1];
     }
