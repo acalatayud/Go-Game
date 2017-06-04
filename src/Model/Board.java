@@ -32,7 +32,7 @@ public class Board {
         }
     }*/
     private int playerN = 1;
-    private HashSet<Chain> playerChains;
+    private HashSet<Chain> chains;
     private int[] playerCaptures = new int[2];
     private Stone[][] board = new Stone[Constants.boardSize][Constants.boardSize];
     private boolean[] playerPassed = new boolean[2];
@@ -46,7 +46,7 @@ public class Board {
 
 
     public Board(){
-        playerChains = new HashSet<Chain>();;
+        chains = new HashSet<Chain>();;
 
         playerCaptures[0] = 0;
         playerCaptures[1] = 0;
@@ -60,14 +60,14 @@ public class Board {
         newBoard.playerPassed = playerPassed.clone();
         newBoard.playerN = this.playerN;
 
-        for (Chain chain : playerChains) {
+        for (Chain chain : chains) {
             Chain newChain = new Chain();
             for (Stone stone : chain.getStones()) {
                 Stone newStone = new Stone(stone.getX(), stone.getY(), stone.getPlayer(), stone.getLiberties(), newChain);
                 newChain.addStone(newStone);
                 newBoard.board[stone.getY()][stone.getX()] = newStone;
             }
-            newBoard.playerChains.add(newChain);
+            newBoard.chains.add(newChain);
         }
 
         return newBoard;
