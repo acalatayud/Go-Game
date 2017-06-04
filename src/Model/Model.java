@@ -13,6 +13,7 @@ import static Controller.Controller.waitForPlayerMove;
 public class Model {
 
     Board board;
+    int[][] koBoard;
 
     private static int[][][] influenceMaps = new int[2][Constants.boardSize][Constants.boardSize];
     private static int lastMap = 0;
@@ -28,43 +29,6 @@ public class Model {
         this.board = board;
     }
 
-    /**
-     * El tema es el siguiente, la catedra pide que hagamos un algoritmo
-     * determinista y resulta que no existe una funcion que pondera el valor
-     * de una movida en GO de manera determinista, entonces propongo lo siguiente:
-     *
-     * El valor heurístico es un int que comienza en 0 y no tiene cotas, ya que se darán naturalmente con el sistema
-     * El método analizaria varios criterios y en base a eso sumaria y restaria puntaje a la jugada
-     * El puntaje sería ponderado y requeriría análisis para determinar un buen número
-     * Por ejemplo:
-     *     el valor comienza en 0
-     *     suma 30 por cada pieza enemiga que se adquiera en la jugada
-     *     suma 20 por cada territorio que se capture
-     *     suma 10 por cada paso en la direccion de formar una figura fuerte
-     *     (una figura fuerte es una figura tácticamente ventajosa, facil de defender
-     *     como por ejemplo el bamboo:
-     *     0 1 0 1 0
-     *     0 1 0 1 0
-     *     ese sería un bamboo para el jugador 1)
-     *     resta 30 por cada pieza dejada a morir
-     *     resta 20 por cada territorio propio dejado sin defender
-     *     resta 10 por cada paso en la direccion de formar una figura débil (piezas aisladas)
-     *
-     *     también leí que hay una zona media donde es más conveniente poner piezas (cerca de las enemigas pero no tan aisladas)
-     *     habria que estudias más el tema
-     *
-     *     (habría que poner muchos más criterios y pensar un algoritmo que pueda revisar todos en la
-     *     menor cantidad de recorridos, tambien hay que analizar la relación entre
-     *     cuanto afecta el criterio y cuanto aumenta la complejidad, por ejemplo:
-     *     si hay un criterio cuyo valor ponderado es +- 3 y aumenta la complejidad drásticamente conviene
-     *     dejarlo afuera)
-     *
-     *     En cuanto a las cotas, existiría una cota natural fácilmente calculable
-     *     ya que hay cantidad de posiciones finitas, dicha cota
-     *     (sea +- 13*13*30 , osea +- 65910) entonces ese valor positivo sería el valor heurístico
-     *     de una jugada que gana la partida, y el valor negativo sería el valor de una
-     *     jugada que resulta en perder el partido, de esta manera se prioriza la victoria ante cualquier criterio
-     **/
     public static int ponderHeuristicValue(Board board, int player){//por el momento dejo static
         Stone[][] stones = board.getBoard();
         for (int y = 0; y < Constants.boardSize; y++) {
@@ -404,6 +368,7 @@ public class Model {
     }
 
     public Board getAIMove(Board board){
+        System.out.println("getaimove");
         GameTree tree = new GameTree(board,2);
         Node move = tree.buildTree(board);
         if(move.getxPos()==-1&&move.getyPos()==-1)
@@ -419,7 +384,7 @@ public class Model {
 
         while(!board.gameFinished()){
             int playerTurn = board.getPlayerN();
-            //System.out.println(playerTurn);
+            System.out.println(playerTurn);
             if(playerTurn == 2) {
                 Board auxBoard = getAIMove(board);
                 if (auxBoard == null)
@@ -440,5 +405,23 @@ public class Model {
         GameTree tree = new GameTree(board,player);
         Node move = tree.buildTree(board);
         System.out.println(move);
+    }
+
+    public void storeKO(Board board){
+        for(int i=0;i<Constants.boardSize;i++){
+            for(int j=0;j<Constants.boardSize;j++){
+                koBoard[i][j] = board.checkSpace(j,i);
+            }
+        }
+    }
+
+    public boolean violatesKO(Board board){
+        for(int i=0;i<Constants.boardSize;i++){
+            for(int j=0;j<Constants.boardSize;j++){
+                if (board.checkSpace(j,i)!=koBoard[j][i])
+                    return false;
+            }
+        }
+        return true;
     }
 }

@@ -77,6 +77,7 @@ public class GameTree {
     }
 
     private Node depthNoPrune(Board board, Node current, int player, int depth) {
+        System.out.println("minimax");
         ArrayList<Node> children = generateMoves(board,player);
         if (depth==0 || (children.size()==1)) { // If depth reached or is terminal node (only possibility is pass)
             current.setHeuristicValue(Model.ponderHeuristicValue(board, this.player));

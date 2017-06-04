@@ -214,7 +214,7 @@ public class Controller {
 	// no se que hace, la deje por las dudas.
     public static Board waitForPlayerMove(Board board){
         return new Board();//dummy para q compile
-        
+
         // cuando el jugador pasa devuelve null
     }
 
