@@ -394,6 +394,7 @@ public class Model {
             int playerTurn = board.getPlayerN();
             //System.out.println(playerTurn);
             if(playerTurn == 2) {
+                System.out.println("entro al if");
                 Board auxBoard = getAIMove(board);
                 if (auxBoard == null)
                     board.pass(playerTurn);

@@ -2,6 +2,7 @@ package View;
 import Controller.Controller;
 import Model.Board;
 import Model.Stone;
+import Service.Constants;
 
 import java.awt.EventQueue;
 
@@ -33,14 +34,13 @@ public class BoardView {
     private ImagePanel stoneButtonsPanel;
     private JPanel bottomPanel;
     private JButton btnPass;
-    private ArrayList<StoneButton> stoneButtons;
+    private StoneButton[][] stoneButtons;
 
     /**
      * Create the application and initialize it.
-     * @param board: a board can be passed which will initialize the swing components with the board´s current state.
      */
-    public BoardView(Board board) {
-        stoneButtons = new ArrayList<>();
+    public BoardView() {
+        stoneButtons = new StoneButton[Constants.boardSize][Constants.boardSize];
         frame = new JFrame();
         frame.setResizable(false);
         frame.setBounds(300, 300, 610, 680);
@@ -78,19 +78,15 @@ public class BoardView {
         c.gridx = 0;
         c.gridy = 1;
         containerPanel.add(bottomPanel, c);
-
-        placeStones(board);
+        CreateButtons();
 
         btnPass = new JButton("pass");
         btnPass.addActionListener(new ButtonListener());
         bottomPanel.add(btnPass);
 
         txtPlayern = new JTextArea();
-        playerN = board.getPlayerN();
-        if(playerN == 1)
-            txtPlayern.setText("Player 1");
-        else
-            txtPlayern.setText("Player 2");
+        txtPlayern.setText("Player 1");
+        playerN = 1;
         bottomPanel.add(txtPlayern);
         txtPlayern.setColumns(10);
 
@@ -99,95 +95,91 @@ public class BoardView {
     /**
      * same as the above but with no board.
      */
-    public BoardView(){
-
-        stoneButtons = new ArrayList<>();
-        frame = new JFrame();
-        frame.setResizable(false);
-        frame.setBounds(300, 300, 610, 680);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
-
-        JPanel containerPanel = new JPanel();
-        frame.getContentPane().add(containerPanel);
-        GridBagLayout gbl = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
-        containerPanel.setLayout(gbl);
-        containerPanel.setSize(600, 650);
-
-        Image bg = Toolkit.getDefaultToolkit().createImage("Sources/Board600.png");
-        stoneButtonsPanel = new ImagePanel(bg);
-        stoneButtonsPanel.setSize(600,600);
-        Dimension dim = new Dimension(600,600);
-        stoneButtonsPanel.setPreferredSize(dim);
-        stoneButtonsPanel.setMaximumSize(dim);
-        stoneButtonsPanel.setMinimumSize(dim);
-        c.gridx = 0;
-        c.gridy = 0;
-        stoneButtonsPanel.setLayout(new GridLayout(13, 13, 0, 0));
-        containerPanel.add(stoneButtonsPanel,c);
-
-
-        bottomPanel = new JPanel();
-        bottomPanel.setSize(600, 50);
-        dim = new Dimension(600, 50);
-        bottomPanel.setMinimumSize(dim);
-        bottomPanel.setMaximumSize(dim);
-        bottomPanel.setPreferredSize(dim);
-        FlowLayout fl_bottomPanel = (FlowLayout) bottomPanel.getLayout();
-        fl_bottomPanel.setAlignment(FlowLayout.LEFT);
-        c.gridx = 0;
-        c.gridy = 1;
-        containerPanel.add(bottomPanel, c);
-
-        placeStones(null);
-
-        btnPass = new JButton("pass");
-        btnPass.addActionListener(new ButtonListener());
-        bottomPanel.add(btnPass);
-
-        playerN = 1;
-        txtPlayern.setText("player 1");
-        bottomPanel.add(txtPlayern);
-        txtPlayern.setColumns(10);
-    }
+//    public BoardView(){
+//
+//        stoneButtons = new ArrayList<>();
+//        frame = new JFrame();
+//        frame.setResizable(false);
+//        frame.setBounds(300, 300, 610, 680);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
+//
+//        JPanel containerPanel = new JPanel();
+//        frame.getContentPane().add(containerPanel);
+//        GridBagLayout gbl = new GridBagLayout();
+//        GridBagConstraints c = new GridBagConstraints();
+//        containerPanel.setLayout(gbl);
+//        containerPanel.setSize(600, 650);
+//
+//        Image bg = Toolkit.getDefaultToolkit().createImage("Sources/Board600.png");
+//        stoneButtonsPanel = new ImagePanel(bg);
+//        stoneButtonsPanel.setSize(600,600);
+//        Dimension dim = new Dimension(600,600);
+//        stoneButtonsPanel.setPreferredSize(dim);
+//        stoneButtonsPanel.setMaximumSize(dim);
+//        stoneButtonsPanel.setMinimumSize(dim);
+//        c.gridx = 0;
+//        c.gridy = 0;
+//        stoneButtonsPanel.setLayout(new GridLayout(13, 13, 0, 0));
+//        containerPanel.add(stoneButtonsPanel,c);
+//
+//
+//        bottomPanel = new JPanel();
+//        bottomPanel.setSize(600, 50);
+//        dim = new Dimension(600, 50);
+//        bottomPanel.setMinimumSize(dim);
+//        bottomPanel.setMaximumSize(dim);
+//        bottomPanel.setPreferredSize(dim);
+//        FlowLayout fl_bottomPanel = (FlowLayout) bottomPanel.getLayout();
+//        fl_bottomPanel.setAlignment(FlowLayout.LEFT);
+//        c.gridx = 0;
+//        c.gridy = 1;
+//        containerPanel.add(bottomPanel, c);
+//
+//        placeStones(null);
+//
+//        btnPass = new JButton("pass");
+//        btnPass.addActionListener(new ButtonListener());
+//        bottomPanel.add(btnPass);
+//
+//        playerN = 1;
+//        txtPlayern.setText("player 1");
+//        bottomPanel.add(txtPlayern);
+//        txtPlayern.setColumns(10);
+//    }
 
     /**Auxiliary method to place a board´s stones within the swing environment.
      * */
-    public void placeStones(Board board){
-        if(board != null) {
-            for (Stone[] row : board.getBoard()) {
-                for (Stone s : row) {
-
-                    StoneButton b = new StoneButton();
-                    ButtonListener bl = new ButtonListener();
-                    b.addActionListener(bl);
-                    b.setOpaque(false);
-                    b.setContentAreaFilled(false);
-                    b.setBorderPainted(false);
-
-                    if (s != null) {
-                        b.setPlaced(true);
-                        if (s.getPlayer() == 1)
-                            b.setIcon(blackStone);
-                        if (s.getPlayer() == 2)
-                            b.setIcon(whiteStone);
-                    }
-                    stoneButtons.add(b);
-                    stoneButtonsPanel.add(b);
+    public void update(Board board){
+        playerN = board.getPlayerN();
+        int i=0;
+        int j;
+        if(board == null)
+        throw new IllegalArgumentException("board is null");
+        for (Stone[] row : board.getBoard()) {
+            j =0;
+            for (Stone s : row) {
+                StoneButton b =  stoneButtons[i][j];
+                if (s != null) {
+                    setStone(b,s.getPlayer());
                 }
+                j++;
             }
+            i++;
         }
-        else {
-            Integer i;
-            for (i = 0; i < 169; i++) {
-                StoneButton b = new StoneButton();
+    }
+
+    private void CreateButtons(){
+        int i, j;
+        for (i = 0; i < 12; i++) {
+            for(j=0; j < 12; j++) {
+                StoneButton b = new StoneButton(i, j);
                 ButtonListener bl = new ButtonListener();
                 b.addActionListener(bl);
                 b.setOpaque(false);
                 b.setContentAreaFilled(false);
                 b.setBorderPainted(false);
-                stoneButtons.add(b);
+                stoneButtons[i][j]= b;
                 stoneButtonsPanel.add(b);
             }
         }
@@ -226,9 +218,21 @@ public class BoardView {
      * */
     private class StoneButton extends JButton{
         boolean placed;
-        public StoneButton(){
+        int row;
+        int col;
+        public StoneButton(int i, int j){
             super();
             placed = false;
+            row = i;
+            col = j;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public int getCol() {
+            return col;
         }
 
         public void setPlaced(boolean val){
@@ -242,18 +246,18 @@ public class BoardView {
     private class ButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             if (clickAvailable) {
+                clickAvailable = false;
                 if (e.getSource() == btnPass) {
                     Controller.pass();
                     return;
                 }
-                int i = 0;
-                while (e.getSource() != stoneButtons.get(i)) {
-                    i++;
+                if (e.getSource() instanceof StoneButton) {
+                    StoneButton button = (StoneButton) e.getSource();
+                    int row = button.getRow();
+                    int col = button.getCol();
+                    Controller.placingAttempt(row, col,playerN);
+
                 }
-                int fil = (int) Math.floor(i / 13);
-                int col = (i - (fil * 13));
-                clickAvailable = false;
-                Controller.placingAttempt(fil, col, playerN);
                 clickAvailable = true;
             }
         }
@@ -262,18 +266,20 @@ public class BoardView {
 
     /**Updates the player to transition from one player to the next.
      * */
-    public void nextPlayer(){
-
-        if(playerN == 1) {
-            playerN = 2;
-            txtPlayern.setText("player 2");
-        }
-        else {
-            playerN = 1;
-            txtPlayern.setText("player 1");
-        }
-
-    }
+//    public void nextPlayer(){
+//
+//        if(playerN == 1) {
+//            playerN = 2;
+//            txtPlayern.setText("player 2");
+//            clickAvailable = false;
+//        }
+//        else {
+//            playerN = 1;
+//            txtPlayern.setText("player 1");
+//            clickAvailable = true;
+//        }
+//
+//    }
 
     /**Auxiliary function to initialize the frame.
     * */
@@ -282,13 +288,13 @@ public class BoardView {
     }
 
     /**This method will remove a stone from a certain position
-     * @param pos: the position from which the stone will be removed, the parameter must belong to the interval [0,168].
      * @return true if there was a stone to be removed and it was removed successfully, false otherwise.
      * */
-    public boolean removeStone(int pos){
+    public boolean removeStone(int i, int j){
+        int pos = i*13 + j;
         if(pos<0 || pos>=169)
             throw new IllegalArgumentException("position must be a number from 0 to 168");
-        StoneButton stone = stoneButtons.get(pos);
+        StoneButton stone = stoneButtons[i][j];
         if(stone.isPlaced()){
             stone.setPlaced(false);
             return true;
@@ -298,16 +304,14 @@ public class BoardView {
     }
 
     /** sets a stone on the indicated position.
-     *@param pos: the position from which the stone will be placed, the parameter must belong to the interval [0,168].
      *@return true if the stone could be successfully placed, false otherwise.
     **/
-    public boolean setStone(int pos){
+    public boolean setStone(StoneButton stone, int player){
 
-        StoneButton stone = stoneButtons.get(pos);
         if(stone.isPlaced())
             throw new IllegalArgumentException("the position is already occupied by a stone");
         else{
-            if(playerN == 1) {
+            if(player == 1) {
                 stone.setIcon(blackStone);
                 stone.setPlaced(true);
             }
@@ -322,17 +326,17 @@ public class BoardView {
     /**sets the current player within the view.
      *@param player: 1 if it´s the black player, 2 if it´s the white player.
      * */
-    private void setPlayer(int player){
-        if(player != 1 & player!= 2)
-            throw new IllegalArgumentException("wrong playerN");
-        if(player == 1){
-            playerN = 1;
-            txtPlayern.setText("player 1");
-        }
-        else {
-            playerN = 2;
-            txtPlayern.setText("player 2");
-        }
-    }
+//    private void setPlayer(int player){
+//        if(player != 1 & player!= 2)
+//            throw new IllegalArgumentException("wrong playerN");
+//        if(player == 1){
+//            playerN = 1;
+//            txtPlayern.setText("player 1");
+//        }
+//        else {
+//            playerN = 2;
+//            txtPlayern.setText("player 2");
+//        }
+//    }
 
 }
