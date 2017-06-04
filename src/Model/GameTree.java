@@ -22,7 +22,7 @@ public class GameTree {
     }
 
     /**
-     * Construye el Ã¡rbol y retorna el Node representando
+     * Construye el árbol y retorna el Node representando
      * la mejor jugada encontrada,
      * @return Node
      */
@@ -42,7 +42,8 @@ public class GameTree {
                 return null; // return timeNoPrune()
             }
         }
-        b.close();
+        if(Constants.dotTree)
+            b.close();
         return move;
     }
 
