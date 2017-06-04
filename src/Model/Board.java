@@ -154,38 +154,40 @@ public class Board {
     }
 
     public boolean violatesSuicide(int x, int y, int player) {
-        boolean player1=false;
-        boolean player2=false;
-        Stone neighbor=null;
+        Stone neighbor = null;
 
         for(int i=0; i<4 ; i++){
             switch(i){
                 case 0:
-                    if(!(x > 0 && (neighbor = board[y][x-1]) != null))
+                    if(x == 0)
                         continue;
+                    neighbor = board[y][x-1];
                     break;
                 case 1:
-                    if(!(x < Constants.boardSize - 1 && (neighbor = board[y][x+1]) != null))
+                    if(x == Constants.boardSize - 1)
                         continue;
+                    neighbor = board[y][x+1];
                     break;
                 case 2:
-                    if(!(y > 0 && (neighbor = board[y-1][x]) != null))
+                    if(y == 0)
                         continue;
+                    neighbor = board[y-1][x];
                     break;
                 case 3:
-                    if(!(y < Constants.boardSize - 1 && (neighbor = board[y+1][x]) != null))
+                    if(y == Constants.boardSize - 1)
                         continue;
-                    break;
-                default:
+                    neighbor = board[y+1][x];
                     break;
             }
-            if(neighbor.getPlayer()==1)
-                player1=true;
-            if(neighbor.getPlayer()==2)
-                player2=true;
-        }
 
-        return player==1?(!player1&&player2):(player1&&!player2);
+            if(neighbor == null)
+                return false;
+
+            if(neighbor.getChain().getLiberties() > 1)
+                return false;
+
+        }
+        return true;
     }
 
     public boolean violatesKo(int x, int y, int player) {
