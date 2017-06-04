@@ -183,7 +183,7 @@ public class Board {
             if(neighbor == null)
                 return false;
 
-            if(neighbor.getChain().getLiberties() > 1)
+            if(neighbor.getPlayer() == player && neighbor.getChain().getLiberties() > 1)
                 return false;
 
         }
