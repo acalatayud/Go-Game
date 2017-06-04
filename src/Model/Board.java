@@ -79,8 +79,10 @@ public class Board {
             playerN = 1;
     }
     public boolean addPiece(int x, int y, int player){
-        if (outOfBounds(x, y) || board[y][x]!= null || violatesSuicide(x, y, player) || violatesKo(x, y, player)) {
-            System.out.println("piece could not be added to the model");
+        if (!verifyMove(x, y, player)) {
+          if(x == -1 && y == -1)
+        		pass(player);
+            //System.out.println("piece could not be added to the model");
             return false;
         }
         else{
@@ -159,6 +161,7 @@ public class Board {
             for(Stone s : samePlayerStones)
                 s.decLiberties();
 
+            playerPassed[player-1] = false;
             //System.out.println("piece was added to the model");
             return true;
         }
@@ -166,6 +169,10 @@ public class Board {
 
     public boolean outOfBounds(int x, int y) {
         return x < 0 || x >= Constants.boardSize || y < 0 || y >= Constants.boardSize;
+    }
+
+    public boolean verifyMove(int x, int y, int player) {
+      return !(outOfBounds(x, y) || board[y][x]!= null || violatesSuicide(x, y, player) || violatesKo(x, y, player));
     }
 
     public boolean violatesSuicide(int x, int y, int player) {

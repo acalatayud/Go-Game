@@ -48,14 +48,16 @@ public class GameTree {
 
     private Node depthWithPrune(Board board, Node node, int depth, int alpha, int beta, int player){
         ArrayList<Node> children = generateMoves(board,player);
-        if(depth==0||(children.size()==1)){
+        if(depth==0||board.gameFinished()){
             node.setHeuristicValue(Model.ponderHeuristicValue(board,this.player));
             return node;
         }
-                
+
         int upNext = player == 1 ? 2 : 1;
         int startingValue = player == this.player ? Constants.worstValue: Constants.bestValue;
         node.setHeuristicValue(startingValue);
+        Node selected = new Node(-1,-1, player);
+        selected.setHeuristicValue(startingValue);
 
         for (Node child : children){
         	Board boardNew = board.duplicate();
@@ -64,10 +66,14 @@ public class GameTree {
         		depthWithPrune(boardNew,child,depth-1,alpha,beta,upNext);
         		if(player==this.player) {
         			node.setHeuristicValue(Math.max(node.getHeuristicValue(),child.getHeuristicValue()));
+        			if(child.compareTo(selected) > 0)
+        				selected = child;
         			alpha = Math.max(alpha,node.getHeuristicValue());
         		}
         		else {
         			node.setHeuristicValue(Math.min(node.getHeuristicValue(),child.getHeuristicValue()));
+        			if(child.compareTo(selected) < 0)
+        				selected = child;
         			beta = Math.min(beta, node.getHeuristicValue());
         		}
         	}
@@ -78,18 +84,17 @@ public class GameTree {
         		b.setLabel(child);
         	}
         }
-
-        Node best = player == this.player ? Collections.max(children) : Collections.min(children);
+        
         if(Constants.dotTree) {
-        	b.changeColor(best, "red");
+        	b.changeColor(selected, "red");
         	b.setLabel(node);
         }
-        return best;
+        return selected;
     }
 
     private Node depthNoPrune(Board board, Node current, int player, int depth) {
     	ArrayList<Node> children = generateMoves(board,player);
-        if (depth==0 || (children.size()==1)) { // If depth reached or is terminal node (only possibility is pass)
+        if (depth==0 || board.gameFinished()) { // If depth reached or is terminal node (only possibility is pass)
             current.setHeuristicValue(Model.ponderHeuristicValue(board, this.player));
             return current;
         }
@@ -122,7 +127,7 @@ public class GameTree {
 
         for(int i=0; i < Constants.boardSize ; i++){
             for(int j=0; j < Constants.boardSize ; j++){
-                if (board.checkSpace(j,i)==0){
+                if (board.verifyMove(j,i,player)){
                 toAdd = new Node(j,i,player);
                 moves.add(toAdd);
                 }
