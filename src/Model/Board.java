@@ -326,4 +326,23 @@ public class Board {
         }
         return ans;
     }
+
+    public String chainBoardAsString() {
+        ArrayList<Chain> chainList = new ArrayList<>();
+        chainList.addAll(chains);
+        Stone s;
+        String ans = "";
+        for(int i=0;i<13;i++){
+            ans+= "[";
+            for(int j=0;j<13;j++){
+                s = board[i][j];
+                if(s != null)
+                    ans += String.format("%1$4s", chainList.indexOf(s.getChain()));
+                else
+                    ans += "   -";
+            }
+            ans+= "]\n";
+        }
+        return ans;
+    }
 }
