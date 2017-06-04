@@ -123,6 +123,7 @@ public class Board {
                     capturedStones = neighbor.decLiberties();
                     if(capturedStones != null) {
                         playerCaptures[player-1] += capturedStones.size();
+                        chains.remove(capturedStones.get(0).getChain());
                         for(Stone stone : capturedStones)
                             board[stone.getY()][stone.getX()] = null;
                     }
@@ -133,6 +134,9 @@ public class Board {
             for(Chain chain : samePlayerChains) {
                 newChain.join(chain);
             }
+
+            chains.removeAll(samePlayerChains);
+            chains.add(newChain);
 
             Stone stone = new Stone((byte)x, (byte)y, (byte)player, (byte)liberties, newChain);
             board[y][x] = stone;
