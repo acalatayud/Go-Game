@@ -410,7 +410,7 @@ public class Model {
         // Mandar por pantalla el ganador
     }
 
-    public void executeFileMode(Board board, int player){
+    public void executeFileMode(int player){
         GameTree tree = new GameTree(board,player);
         Node move = tree.buildTree(board);
         System.out.println(move);

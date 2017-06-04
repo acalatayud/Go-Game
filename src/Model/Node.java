@@ -17,6 +17,7 @@ public class Node implements Comparable<Node>{
     private int xPos;
     private int yPos;
     private int heuristicValue;
+    private int color;
 
     public Node(int xPos, int yPos, int player){
         this.xPos = xPos;
@@ -30,6 +31,14 @@ public class Node implements Comparable<Node>{
 
     public ArrayList<Node> getChildren() {
         return children;
+    }
+    
+    public int getColor() {
+    	return color;
+    }
+    
+    public void setColor(int color) {
+    	this.color = color;
     }
 
     public void setHeuristicValue(int value){
@@ -76,6 +85,8 @@ public class Node implements Comparable<Node>{
     public String toString() {
         if(xPos == -1 && yPos == -1)
             return "PASS";
+        if(xPos == -2 && yPos == -2)
+        	return "START";
         return "(" + xPos +", " + yPos +")";
     }
 }

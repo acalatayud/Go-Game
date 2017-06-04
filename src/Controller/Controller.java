@@ -45,8 +45,8 @@ public class Controller {
 					File fileHandler = new File(filename);
 					if(!fileHandler.exists())
 						throw new FileNotFoundException();
-					Board startingBoard = readBoard(fileHandler);
-					if(startingBoard == null)
+					board = readBoard(fileHandler);
+					if(board == null)
 						throw new IOException();
 				}
 
@@ -128,29 +128,31 @@ public class Controller {
 		//     depthN : Saved in constants
 		//     prune : Saved in constants
 		//     tree : -1 is false, !=-1 is true
-
-		board = new Board();
-		boardView = new BoardView(board);
-		model = new Model(board);
-
-		//initializes the app window.
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					boardView.initFrame();
-
-				} catch (Exception e) {
-					e.printStackTrace();
+		
+		if(board == null) {
+			board = new Board();
+			boardView = new BoardView(board);
+		
+			//initializes the app window.
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						boardView.initFrame();
+	
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-			}
-		});
-
+			});
+		}
+		model = new Model(board);
+		
 		if (visual != -1) {
 			playerN = 1;
 			model.gameLoop();
 		}
 		else{
-			model.executeFileMode(board,playerN);
+			model.executeFileMode(playerN);
 		}
 
 

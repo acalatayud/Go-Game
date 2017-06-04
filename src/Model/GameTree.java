@@ -5,7 +5,6 @@ import Service.Constants;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static Service.Constants.depth;
 
 /**
  *  Header structure for the Game Tree
@@ -13,10 +12,13 @@ import static Service.Constants.depth;
 public class GameTree {
     private Board board;
     private int player;
+    private DotBuilder b;
 
     public GameTree(Board board, int player){
         this.board = board;
         this.player = player;
+        if(Constants.dotTree)
+        	this.b = new DotBuilder(player);
     }
 
     /**
@@ -25,23 +27,23 @@ public class GameTree {
      * @return Node
      */
     public Node buildTree(Board board){
+    	Node move = null;
         if (Constants.prune){
-            if (Constants.depth != -1){
-                return depthWithPrune(board,new Node(-1,-1,player),Constants.depth,Constants.worstValue,Constants.bestValue,player);
-            }
+            if (Constants.depth != -1)
+                move = depthWithPrune(board,new Node(-2,-2,0),Constants.depth,Constants.worstValue,Constants.bestValue,player);
             else {
                 return null; // return timeWithPrune()
             }
-
         }
         else {
-            if (Constants.depth != -1){
-                return depthNoPrune(board,new Node(-1,-1,player),player,Constants.depth);
-            }
+            if (Constants.depth != -1)
+                move = depthNoPrune(board,new Node(-2,-2,0),player,Constants.depth);
             else {
                 return null; // return timeNoPrune()
             }
         }
+        b.close();
+        return move;
     }
 
     private Node depthWithPrune(Board board, Node node, int depth, int alpha, int beta, int player){
@@ -50,52 +52,67 @@ public class GameTree {
             node.setHeuristicValue(Model.ponderHeuristicValue(board,this.player));
             return node;
         }
-        Board boardNew = board.duplicate();
-        boardNew.addPiece(node.getxPos(), node.getyPos(), player);
-        
+                
         int upNext = player == 1 ? 2 : 1;
+        int startingValue = player == this.player ? Constants.worstValue: Constants.bestValue;
+        node.setHeuristicValue(startingValue);
 
-        if (player==this.player){ // Maximizing
-            node.setHeuristicValue(Constants.worstValue);
-            for (Node child : children){
-                node.setHeuristicValue(Math.max(node.getHeuristicValue(),depthWithPrune(boardNew,child,depth-1,alpha,beta,upNext).getHeuristicValue()));
-                alpha = Math.max(alpha,node.getHeuristicValue());
-                if (beta<=alpha)
-                    break;
-            }
+        for (Node child : children){
+        	Board boardNew = board.duplicate();
+            boardNew.addPiece(child.getxPos(), child.getyPos(), player);
+        	if(beta>alpha){
+        		depthWithPrune(boardNew,child,depth-1,alpha,beta,upNext);
+        		if(player==this.player) {
+        			node.setHeuristicValue(Math.max(node.getHeuristicValue(),child.getHeuristicValue()));
+        			alpha = Math.max(alpha,node.getHeuristicValue());
+        		}
+        		else {
+        			node.setHeuristicValue(Math.min(node.getHeuristicValue(),child.getHeuristicValue()));
+        			beta = Math.min(beta, node.getHeuristicValue());
+        		}
+        	}
+        	else
+        		child.setColor(2); //Pruned
+        	if(Constants.dotTree) {
+        		b.addEdge(node, child);
+        		b.setLabel(child);
+        	}
         }
-        else{ // Minimizing
-            node.setHeuristicValue(Constants.bestValue);
-            for(Node child : children){
-                node.setHeuristicValue(Math.min(node.getHeuristicValue(),depthWithPrune(boardNew,child,depth-1,alpha,beta,upNext).getHeuristicValue()));
-                beta = Math.min(beta, node.getHeuristicValue());
-                if (beta<=alpha)
-                    break;
-            }
+
+        Node best = player == this.player ? Collections.max(children) : Collections.min(children);
+        if(Constants.dotTree) {
+        	b.changeColor(best, "red");
+        	b.setLabel(node);
         }
-        return node;
+        return best;
     }
 
     private Node depthNoPrune(Board board, Node current, int player, int depth) {
-        System.out.println("minimax");
-        ArrayList<Node> children = generateMoves(board,player);
+    	ArrayList<Node> children = generateMoves(board,player);
         if (depth==0 || (children.size()==1)) { // If depth reached or is terminal node (only possibility is pass)
             current.setHeuristicValue(Model.ponderHeuristicValue(board, this.player));
             return current;
         }
 
         int upNext = player == 1 ? 2 : 1;
-        current.setChildren(children);
         Board boardNew;
 
-        for (Node node : children ) {
+        for (Node child : children ) {
             boardNew = board.duplicate();
-            boardNew.addPiece(node.getxPos(), node.getyPos(), node.getPlayer());
-            depthNoPrune(boardNew, node, upNext, depth - 1);
+            boardNew.addPiece(child.getxPos(), child.getyPos(), child.getPlayer());
+            depthNoPrune(boardNew, child, upNext, depth - 1);
+            if(Constants.dotTree) {
+            	b.addEdge(current, child);
+            	b.setLabel(child);
+            }
         }
 
         Node best = player == this.player ? Collections.max(children) : Collections.min(children);
         current.setHeuristicValue(best.getHeuristicValue());
+        if(Constants.dotTree) {
+        	b.changeColor(best, "red");
+        	b.setLabel(current);
+        }
         return best;
     }
 
