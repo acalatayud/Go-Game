@@ -63,6 +63,7 @@ public class BoardView {
         stoneButtonsPanel.setMinimumSize(dim);
         c.gridx = 0;
         c.gridy = 0;
+        CreateButtons();
         stoneButtonsPanel.setLayout(new GridLayout(13, 13, 0, 0));
         containerPanel.add(stoneButtonsPanel,c);
 
@@ -78,7 +79,7 @@ public class BoardView {
         c.gridx = 0;
         c.gridy = 1;
         containerPanel.add(bottomPanel, c);
-        CreateButtons();
+
 
         btnPass = new JButton("pass");
         btnPass.addActionListener(new ButtonListener());
@@ -171,8 +172,8 @@ public class BoardView {
 
     private void CreateButtons(){
         int i, j;
-        for (i = 0; i < 12; i++) {
-            for(j=0; j < 12; j++) {
+        for (i = 0; i < 13; i++) {
+            for(j=0; j < 13; j++) {
                 StoneButton b = new StoneButton(i, j);
                 ButtonListener bl = new ButtonListener();
                 b.addActionListener(bl);
