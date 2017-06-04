@@ -76,6 +76,7 @@ public class Board {
         else{
             int liberties = 4;
             HashSet<Chain> samePlayerChains = new HashSet<>(4);
+            ArrayList<Stone> samePlayerStones = new ArrayList<>(4);
             Stone neighbor = null;
             ArrayList<Stone> capturedStones;
             //TODO: Modularizar
@@ -104,11 +105,14 @@ public class Board {
                         break;
                 }
                 liberties--;
-                if(neighbor.getPlayer() == player)
+                if(neighbor.getPlayer() == player) {
+                    samePlayerStones.add(neighbor);
                     samePlayerChains.add(neighbor.getChain());
+                }
                 else {
                     capturedStones = neighbor.decLiberties();
                     if(capturedStones != null) {
+                        playerCaptures[player-1] += capturedStones.size();
                         for(Stone stone : capturedStones)
                             board[stone.getY()][stone.getX()] = null;
                     }
@@ -122,7 +126,11 @@ public class Board {
 
             Stone stone = new Stone((byte)x, (byte)y, (byte)player, (byte)liberties, newChain);
             board[y][x] = stone;
-            System.out.println("piece was added to the model");
+
+            for(Stone s : samePlayerStones)
+                s.decLiberties();
+
+            //System.out.println("piece was added to the model");
             return true;
         }
     }
@@ -176,6 +184,10 @@ public class Board {
 
     public int playerPiecesCardinal(int player){
         return playerPieces.get(player-1).size();
+    }
+
+    public int getPlayerCaptures(int player) {
+        return playerCaptures[player-1];
     }
 
     public void pass(int player){
