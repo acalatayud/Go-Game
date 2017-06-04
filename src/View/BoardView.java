@@ -160,7 +160,7 @@ public class BoardView {
         for (Stone[] row : board.getBoard()) {
             j =0;
             for (Stone s : row) {
-                StoneButton b =  stoneButtons[i][j];
+                StoneButton b =  stoneButtons[j][i];
                 if (s != null) {
                     setStone(b,s.getPlayer());
                 }
