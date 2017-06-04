@@ -401,7 +401,8 @@ public class Model {
                     board = auxBoard;
                 //esto probablemente se pueda optimisar
                 Controller.Controller.updateView(board);
-                playerTurn = 1;
+                //playerTurn = 1;
+                board.nextPlayer();
             }
 
         }
