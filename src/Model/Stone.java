@@ -21,6 +21,10 @@ public class Stone {
         chain.addStone(this);
     }
 
+    public Stone clone(Chain chain){
+        return new Stone(x,y,player,liberties,chain);
+    }
+
     public Stone(byte x, byte y, byte player) {
         this(x, y, player, (byte)4, new Chain());
     }

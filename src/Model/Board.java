@@ -33,6 +33,7 @@ public class Board {
     }*/
     private int playerN = 1;
     private ArrayList<HashSet<Stone>> playerPieces;
+    private ArrayList<HashSet<Chain>> playerChains;
     private int[] playerCaptures = new int[2];
     private Stone[][] board = new Stone[Constants.boardSize][Constants.boardSize];
     private boolean[] playerPassed = new boolean[2];
@@ -41,25 +42,44 @@ public class Board {
         return board;
     }
     public int getPlayerN(){
-        return playerN;}
+        return playerN;
+    }
 
 
     public Board(){
         playerPieces = new ArrayList<>(2);
         playerPieces.add(new HashSet<Stone>());
         playerPieces.add(new HashSet<Stone>());
+        playerChains = new ArrayList<>(2);
+        playerChains.add(new HashSet<Chain>());
+        playerChains.add(new HashSet<Chain>());
+
         playerCaptures[0] = 0;
         playerCaptures[1] = 0;
         playerPassed[0] = false;
         playerPassed[1] = false;
     }
-    //Este duplicate no sirve para el minimax, hay que clonar todas las piezas
+
     public Board duplicate(){
         Board newBoard = new Board();
-        newBoard.board = board.clone();
         newBoard.playerCaptures = playerCaptures.clone();
-        newBoard.playerPieces = (ArrayList<HashSet<Stone>>) playerPieces.clone();
         newBoard.playerPassed = playerPassed.clone();
+        newBoard.playerN = this.playerN;
+        int player=0;
+        for (HashSet<Chain> set : playerChains){
+            player++;
+            for (Chain chain : set){
+                Chain newChain = new Chain();
+                for(Stone stone : chain.getStones()){
+                    Stone newStone = new Stone(stone.getX(),stone.getY(),stone.getPlayer(),stone.getLiberties(),newChain);
+                    newChain.addStone(newStone);
+                    newBoard.playerPieces.get(player).add(newStone);
+                    newBoard.board[stone.getY()][stone.getX()] = newStone;
+                }
+                newBoard.playerChains.get(player).add(newChain);
+            }
+        }
+
         return newBoard;
     }
     public void nextPlayer(){
