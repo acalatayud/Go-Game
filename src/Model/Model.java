@@ -3,6 +3,7 @@ package Model;
 import Service.Constants;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import static Controller.Controller.waitForPlayerMove;
@@ -47,18 +48,18 @@ public class Model {
 
         dilation(5);
 
-        System.out.println(calculateInfluence());
+        //System.out.println(calculateInfluence());
 
         value += influenceWeight * calculateInfluence();
 
-        printInfluenceMap();
+        //printInfluenceMap();
 
         erosion(21);
 
-        System.out.println(calculateInfluence());
+        //System.out.println(calculateInfluence());
         value += potentialTerritoryWeight * calculateInfluence();
 
-        printInfluenceMap();
+        //printInfluenceMap();
 
         int otherPlayer;
         if(player == 1)
@@ -66,12 +67,12 @@ public class Model {
         else
             otherPlayer = 1;
 
-        System.out.println(board.getPlayerCaptures(player));
-        System.out.println(board.getPlayerCaptures(otherPlayer));
+        //System.out.println(board.getPlayerCaptures(player));
+        //System.out.println(board.getPlayerCaptures(otherPlayer));
 
         value += captureWeight * (board.getPlayerCaptures(player) - board.getPlayerCaptures(otherPlayer));
 
-        System.out.println("Value: "+value);
+        //System.out.println("Value: "+value);
 
         return value;
     }
@@ -162,12 +163,18 @@ public class Model {
 
     public static void test3() {
         Board board = new Board();
-        Random rand = new Random();
-        for(int i=0; i < 1000; i++) {
+        Random rand = new Random(1);
+        for(int i=0; i < 50; i++) {
             board.addPiece(rand.nextInt(13), rand.nextInt(13), rand.nextInt(2) + 1);
         }
-        System.out.println(board);
-        ponderHeuristicValue(board, 1);
+        //System.out.println(board);
+
+        long start = System.nanoTime();
+
+        for(int i=0; i < 100000; i++)
+            ponderHeuristicValue(board, 1);
+
+        System.out.println((System.nanoTime() - start)/1000000);
     }
 
     private static int calculateInfluence() {
