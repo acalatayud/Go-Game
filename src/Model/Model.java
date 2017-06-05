@@ -1,12 +1,7 @@
 package Model;
 
 import Service.Constants;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
-
-import static Controller.Controller.waitForPlayerMove;
 
 /**
  * Created by juan on 23/05/17.
@@ -391,6 +386,12 @@ public class Model {
     public void gameLoop(){
 
         while(!board.gameFinished()){
+            try {
+                Thread.sleep(1);
+            }
+            catch (Exception e){
+                continue;
+            }
             int playerTurn = board.getPlayerN();
             //System.out.println(playerTurn);
             if(playerTurn == 2) {
