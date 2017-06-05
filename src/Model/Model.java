@@ -35,6 +35,9 @@ public class Model {
                     else
                         influenceMaps[0][y][x] = -500;
                 }
+                else {
+                    influenceMaps[0][y][x] = 0;
+                }
             }
         }
         lastMap = 0;
