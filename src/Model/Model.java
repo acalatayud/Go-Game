@@ -405,9 +405,9 @@ public class Model {
                 else
                     board = auxBoard;
                 //esto probablemente se pueda optimisar
+                board.nextPlayer();
                 Controller.Controller.updateView(board);
                 //playerTurn = 1;
-                board.nextPlayer();
             }
 
         }

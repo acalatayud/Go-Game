@@ -54,7 +54,7 @@ public class BoardView {
         containerPanel.setLayout(gbl);
         containerPanel.setSize(600, 650);
 
-        Image bg = Toolkit.getDefaultToolkit().createImage("Sources/Board600.png");
+        Image bg = Toolkit.getDefaultToolkit().createImage("src/Sources/Board600.png");
         stoneButtonsPanel = new ImagePanel(bg);
         stoneButtonsPanel.setSize(600,600);
         Dimension dim = new Dimension(600,600);

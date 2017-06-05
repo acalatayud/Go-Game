@@ -338,10 +338,10 @@ public class Board {
     //For debugging
     public String toString(){
         String ans = "";
-        for(int i=0;i<13;i++){
+        for(int y=0; y < 13; y++){
             ans+= "[";
-            for(int j=0;j<13;j++){
-                ans+=this.checkSpace(j,i);
+            for(int x=0; x < 13; x++){
+                ans+=this.checkSpace(x,y);
                 ans+="   ";
             }
             ans+= "]\n";
