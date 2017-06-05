@@ -179,6 +179,8 @@ public class Board {
 
     public boolean violatesSuicide(int x, int y, int player) {
         Stone neighbor = null;
+        HashSet<Chain> chains = new HashSet<>(4);
+        int stoneCount = 0;
 
         for(int i=0; i<4 ; i++){
             switch(i){
@@ -207,10 +209,22 @@ public class Board {
             if(neighbor == null)
                 return false;
 
-            if(neighbor.getPlayer() == player && neighbor.getChain().getLiberties() > 1)
-                return false;
+            if(neighbor.getPlayer() == player) {
+                chains.add(neighbor.getChain());
+                stoneCount++;
+            }
 
         }
+
+        if(stoneCount != 0){
+            int liberties = 0;
+            for(Chain c : chains)
+                liberties += c.getLiberties();
+
+            if(liberties != stoneCount)
+                return false;
+        }
+
         return true;
     }
 
