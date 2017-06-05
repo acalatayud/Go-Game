@@ -39,6 +39,11 @@ public class Stone {
         return chain.updateLiberties(-1);
     }
 
+    public void incLiberties() {
+        liberties++;
+        chain.updateLiberties(1);
+    }
+
     public void setLiberties(byte liberties) {
         chain.updateLiberties(liberties - this.liberties);
         this.liberties = liberties;

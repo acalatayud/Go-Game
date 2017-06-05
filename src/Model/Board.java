@@ -143,6 +143,7 @@ public class Board {
                         chains.remove(capturedStones.get(0).getChain());
                         for(Stone stone : capturedStones)
                             board[stone.getY()][stone.getX()] = null;
+                        updateSurroundings(capturedStones);
                     }
                 }
             }
@@ -216,6 +217,42 @@ public class Board {
         return false;
     }
 
+    private void updateSurroundings(ArrayList<Stone> capturedStones) {
+        Stone neighbor = null;
+        int x,y;
+        for(Stone stone : capturedStones) {
+            x = stone.getX();
+            y = stone.getY();
+            for (int i = 0; i < 4; i++) {
+                switch (i) {
+                    case 0:
+                        if (x == 0)
+                            continue;
+                        neighbor = board[y][x - 1];
+                        break;
+                    case 1:
+                        if (x == Constants.boardSize - 1)
+                            continue;
+                        neighbor = board[y][x + 1];
+                        break;
+                    case 2:
+                        if (y == 0)
+                            continue;
+                        neighbor = board[y - 1][x];
+                        break;
+                    case 3:
+                        if (y == Constants.boardSize - 1)
+                            continue;
+                        neighbor = board[y + 1][x];
+                        break;
+                }
+
+                if(neighbor != null)
+                    neighbor.incLiberties();
+
+            }
+        }
+    }
     public int checkSpace(int xPos, int yPos){
         return board[yPos][xPos] == null ? 0 : board[yPos][xPos].getPlayer();
     }
