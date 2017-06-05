@@ -153,6 +153,7 @@ public class BoardView {
      * */
     public void update(Board board){
         playerN = board.getPlayerN();
+        txtPlayern.setText("Player "+playerN);
         int y=0;
         int x;
         if(board == null)

@@ -162,7 +162,8 @@ public class Board {
             for(Stone s : samePlayerStones)
                 s.decLiberties();
 
-            playerPassed[player-1] = false;
+            playerPassed[0] = false;
+            playerPassed[1] = false;
             //System.out.println("piece was added to the model");
             return true;
         }
@@ -263,6 +264,7 @@ public class Board {
 
     public void pass(int player){
         playerPassed[player-1] = true; //TODO: Resetear si en el turno siguiente no pasa
+        nextPlayer();
     }
 
     public boolean gameFinished(){
