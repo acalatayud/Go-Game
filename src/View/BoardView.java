@@ -164,6 +164,9 @@ public class BoardView {
                 if (s != null) {
                     setStone(b,s.getPlayer());
                 }
+                else{
+                    removeStone(b);
+                }
                 j++;
             }
             i++;
@@ -218,12 +221,10 @@ public class BoardView {
     /**Class extension to support background rendering.
      * */
     private class StoneButton extends JButton{
-        boolean placed;
         int row;
         int col;
         public StoneButton(int i, int j){
             super();
-            placed = false;
             row = i;
             col = j;
         }
@@ -235,11 +236,6 @@ public class BoardView {
         public int getCol() {
             return col;
         }
-
-        public void setPlaced(boolean val){
-            placed = val;
-        }
-        private boolean isPlaced(){return placed;}
     }
 
     /**Button listener which event triggers are handled by the controller.
@@ -291,17 +287,8 @@ public class BoardView {
     /**This method will remove a stone from a certain position
      * @return true if there was a stone to be removed and it was removed successfully, false otherwise.
      * */
-    public boolean removeStone(int i, int j){
-        int pos = i*13 + j;
-        if(pos<0 || pos>=169)
-            throw new IllegalArgumentException("position must be a number from 0 to 168");
-        StoneButton stone = stoneButtons[i][j];
-        if(stone.isPlaced()){
-            stone.setPlaced(false);
-            return true;
-        }
-        else
-            return false;
+    public void removeStone(StoneButton stone){
+        stone.setIcon(null);
     }
 
     /** sets a stone on the indicated position.
@@ -309,19 +296,14 @@ public class BoardView {
     **/
     public boolean setStone(StoneButton stone, int player){
 
-        if(stone.isPlaced())
-            throw new IllegalArgumentException("the position is already occupied by a stone");
-        else{
-            if(player == 1) {
-                stone.setIcon(blackStone);
-                stone.setPlaced(true);
-            }
-            else {
-                stone.setIcon(whiteStone);
-                stone.setPlaced(true);
-            }
-            return true;
+        if(player == 1) {
+            stone.setIcon(blackStone);
         }
+        else {
+            stone.setIcon(whiteStone);
+        }
+        return true;
+
     }
 
     /**sets the current player within the view.
