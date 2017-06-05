@@ -28,8 +28,8 @@ public class BoardView {
     private boolean clickAvailable = true;
     private JFrame frame;
     int playerN;
-    ImageIcon blackStone = new ImageIcon("Sources/blackStone20.png");
-    ImageIcon whiteStone = new ImageIcon("Sources/whiteStone20.png");
+    ImageIcon blackStone = new ImageIcon("src/Sources/blackStone20.png");
+    ImageIcon whiteStone = new ImageIcon("src/Sources/whiteStone20.png");
     private JTextArea txtPlayern;
     private ImagePanel stoneButtonsPanel;
     private JPanel bottomPanel;
@@ -153,37 +153,37 @@ public class BoardView {
      * */
     public void update(Board board){
         playerN = board.getPlayerN();
-        int i=0;
-        int j;
+        int y=0;
+        int x;
         if(board == null)
         throw new IllegalArgumentException("board is null");
         for (Stone[] row : board.getBoard()) {
-            j =0;
+            x =0;
             for (Stone s : row) {
-                StoneButton b =  stoneButtons[j][i];
+                StoneButton b =  stoneButtons[x][y];
                 if (s != null) {
                     setStone(b,s.getPlayer());
                 }
                 else{
                     removeStone(b);
                 }
-                j++;
+                x++;
             }
-            i++;
+            y++;
         }
     }
 
     private void CreateButtons(){
-        int i, j;
-        for (i = 0; i < 13; i++) {
-            for(j=0; j < 13; j++) {
-                StoneButton b = new StoneButton(i, j);
+        int x, y;
+        for (y = 0; y < 13; y++) {
+            for(x=0; x < 13; x++) {
+                StoneButton b = new StoneButton(x, y);
                 ButtonListener bl = new ButtonListener();
                 b.addActionListener(bl);
                 b.setOpaque(false);
                 b.setContentAreaFilled(false);
                 b.setBorderPainted(false);
-                stoneButtons[i][j]= b;
+                stoneButtons[x][y]= b;
                 stoneButtonsPanel.add(b);
             }
         }
@@ -291,7 +291,7 @@ public class BoardView {
         stone.setIcon(null);
     }
 
-    /** sets a stone on the indicated position.
+    /** sets a stone on the indi    cated position.
      *@return true if the stone could be successfully placed, false otherwise.
     **/
     public boolean setStone(StoneButton stone, int player){
