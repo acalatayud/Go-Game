@@ -17,8 +17,8 @@ public class Model {
     private static int[] yOff = {0,0,-1,1};
     private static int influenceWeight = 1;
     private static int potentialTerritoryWeight = 10;
-    private static int territoryWeight = 50;
-    private static int captureWeight = 50;
+    private static int territoryWeight = 100;
+    private static int captureWeight = 100;
 
 
     public Model(Board board){

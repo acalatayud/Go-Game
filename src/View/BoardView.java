@@ -165,10 +165,11 @@ public class BoardView {
         if(board == null)
         throw new IllegalArgumentException("board is null");
 
+        int[] territory = board.calculateTerritory();
         playerN = board.getPlayerN();
         txtPlayern.setText("Player "+playerN);
-        player1Captures.setText("First: "+board.getPlayerCaptures(1));
-        player2Captures.setText("Second: "+board.getPlayerCaptures(2));
+        player1Captures.setText("Score 1:  "+(board.getPlayerCaptures(1)+territory[0]));
+        player2Captures.setText("Score 2:  "+(board.getPlayerCaptures(2)+territory[1]));
 
         for (Stone[] row : board.getBoard()) {
             x =0;
