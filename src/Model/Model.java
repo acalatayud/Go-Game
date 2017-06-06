@@ -17,8 +17,8 @@ public class Model {
     private static int[] yOff = {0,0,-1,1};
     private static int influenceWeight = 1;
     private static int potentialTerritoryWeight = 10;
-    private static int territoryWeight = 10;
-    private static int captureWeight = 10;
+    private static int territoryWeight = 50;
+    private static int captureWeight = 50;
 
 
     public Model(Board board){
@@ -67,6 +67,9 @@ public class Model {
 
         //System.out.println(board.getPlayerCaptures(player));
         //System.out.println(board.getPlayerCaptures(otherPlayer));
+        int[] territories = board.calculateTerritory();
+
+        value += territoryWeight * (territories[player-1] - territories[otherPlayer-1]);
 
         value += captureWeight * (board.getPlayerCaptures(player) - board.getPlayerCaptures(otherPlayer));
 
@@ -197,10 +200,6 @@ public class Model {
     }
 
     private static int calculatePotentialTerritory() {
-        return 0;
-    }
-
-    private static int calculateTerritory() {
         return 0;
     }
 

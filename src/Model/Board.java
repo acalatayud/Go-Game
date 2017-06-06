@@ -64,7 +64,6 @@ public class Board {
             Chain newChain = new Chain();
             for (Stone stone : chain.getStones()) {
                 Stone newStone = new Stone(stone.getX(), stone.getY(), stone.getPlayer(), stone.getLiberties(), newChain);
-                newChain.addStone(newStone);
                 newBoard.board[stone.getY()][stone.getX()] = newStone;
             }
             newBoard.chains.add(newChain);
@@ -290,7 +289,6 @@ public class Board {
     /**
      * Calculates territory held by both players. It does not return individual territory
      * because the scores are always sought in pairs, so the most efficient solution is to calculate them both.
-     * @param realBoard
      * @return integer array, element 0 is player 1's territory, element 1 is player 2's territory.
      *
      * PSEUDOCODE:
@@ -302,7 +300,7 @@ public class Board {
      *                 add points
      *
      */
-    public int[] calculateTerritory(Board realBoard){
+    public int[] calculateTerritory(){
         Board mockBoard = new Board(); // 0 is unvisited, 1 is visited
 
         // First array: 0 is out of board, 1 is player 1, 2 is player 2
@@ -318,7 +316,7 @@ public class Board {
         for (int i=0; i< Constants.boardSize; i++){
             for (int j=0; j<Constants.boardSize; j++){
                 if (mockBoard.checkSpace(i,j)==0)
-                    floodFill(mockBoard,realBoard,i,j,borders);
+                    floodFill(mockBoard,this,i,j,borders);
 
                 for(Integer space : borders.get(0)){
                     if(player1&&player2)
@@ -380,7 +378,7 @@ public class Board {
      * @return integer (1 or 2 or 0) representing the player who won, or 0 if it is a tie
      */
     public int calculateWinner(){
-        int[] territory = calculateTerritory(this);
+        int[] territory = calculateTerritory();
         int winner;
         if ( (winner = territory[0]+playerCaptures[0] - (territory[1]+playerCaptures[1])) == 0)
             return winner;
