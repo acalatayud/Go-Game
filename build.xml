@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tpe" basedir="." default="main">
+
+	<property name="src.dir"     value="src"/>
+	<property name="bin.dir"   value="bin"/>
+	<property name="main-class"  value="Controller.Controller"/>
+
+	<target name="clean">
+    	<delete dir="${bin.dir}"/>
+	</target>
+	
+	<target name="compile">
+    	<mkdir dir="${bin.dir}"/>
+    	<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" />
+	</target>
+
+	<target name="jar" depends="compile">
+    	<jar destfile="./${ant.project.name}.jar">
+    		<fileset dir="${bin.dir}"/>
+           	<manifest>
+            	<attribute name="Main-Class" value="${main-class}"/>
+        	</manifest>
+    	</jar>
+	</target>
+
+	<target name="main" depends="clean,jar"/>
+
+</project>
