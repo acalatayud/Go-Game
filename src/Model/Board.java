@@ -382,7 +382,7 @@ public class Board {
         int winner;
         if ( (winner = territory[0]+playerCaptures[0] - (territory[1]+playerCaptures[1])) == 0)
             return winner;
-
+        System.out.println(winner);
         return winner > 0 ? 1 : 2;
     }
 

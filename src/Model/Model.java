@@ -412,6 +412,7 @@ public class Model {
         }
         int winner = board.calculateWinner();
         // Mandar por pantalla el ganador
+        System.out.println("winner is: "+winner);
     }
 
     public void executeFileMode(int player){

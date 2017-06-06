@@ -31,6 +31,8 @@ public class BoardView {
     ImageIcon blackStone = new ImageIcon("src/Sources/blackStone20.png");
     ImageIcon whiteStone = new ImageIcon("src/Sources/whiteStone20.png");
     private JTextArea txtPlayern;
+    private JTextArea player1Captures;
+    private JTextArea player2Captures;
     private ImagePanel stoneButtonsPanel;
     private JPanel bottomPanel;
     private JButton btnPass;
@@ -86,9 +88,15 @@ public class BoardView {
         bottomPanel.add(btnPass);
 
         txtPlayern = new JTextArea();
+        player1Captures = new JTextArea();
+        player2Captures = new JTextArea();
+        player1Captures.setText("First: 0");
+        player2Captures.setText("Second: 0");
         txtPlayern.setText("Player 1");
         playerN = 1;
         bottomPanel.add(txtPlayern);
+        bottomPanel.add(player1Captures);
+        bottomPanel.add(player2Captures);
         txtPlayern.setColumns(10);
 
     }
@@ -152,12 +160,16 @@ public class BoardView {
     /**Auxiliary method to place a board´s stones within the swing environment.
      * */
     public void update(Board board){
-        playerN = board.getPlayerN();
-        txtPlayern.setText("Player "+playerN);
         int y=0;
         int x;
         if(board == null)
         throw new IllegalArgumentException("board is null");
+
+        playerN = board.getPlayerN();
+        txtPlayern.setText("Player "+playerN);
+        player1Captures.setText("First: "+board.getPlayerCaptures(1));
+        player2Captures.setText("Second: "+board.getPlayerCaptures(2));
+
         for (Stone[] row : board.getBoard()) {
             x =0;
             for (Stone s : row) {
