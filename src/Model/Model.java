@@ -1,6 +1,9 @@
 package Model;
 
 import Service.Constants;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -23,6 +26,9 @@ public class Model {
 
     public Model(Board board){
         this.board = board;
+        if(board ==null)
+            System.out.println("board in model is null");
+        this.hash = board.zobristHash();
     }
 
     public static int ponderHeuristicValue(Board board, int player){//por el momento dejo static
@@ -403,10 +409,9 @@ public class Model {
                     board.pass(playerTurn);
                 else
                     board = auxBoard;
-                //esto probablemente se pueda optimisar
+                    updateHashes(board);
                 board.nextPlayer();
                 Controller.Controller.updateView(board);
-                //playerTurn = 1;
             }
 
         }
@@ -438,4 +443,26 @@ public class Model {
         }
         return true;
     }
+
+
+
+    int bitString;
+    int prevPrevHash = 0;
+    int prevHash = 0;
+    int hash = 0;
+
+    public void updateHashes(Board board){
+        prevPrevHash = prevHash;
+        prevHash = hash;
+        hash = board.hashCode();
+
+    }
+
+    public void updateHashes(){
+        prevPrevHash = prevHash;
+        prevHash = hash;
+        hash = board.hashCode();
+    }
+
+
 }

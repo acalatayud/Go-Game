@@ -31,6 +31,10 @@ public class Board {
             return result;
         }
     }*/
+    
+    //zobristTable indices: empty=0, black=1, white=2
+    //169x3 table
+    private static int[][] zobristTable = null;
     private int playerN = 1;
     private HashSet<Chain> chains;
     private int[] playerCaptures = new int[2];
@@ -46,7 +50,9 @@ public class Board {
 
 
     public Board(){
-        chains = new HashSet<Chain>();;
+        chains = new HashSet<Chain>();
+        if(zobristTable == null)
+            initializeZobrist();
 
         playerCaptures[0] = 0;
         playerCaptures[1] = 0;
@@ -422,5 +428,82 @@ public class Board {
             ans+= "]\n";
         }
         return ans;
+    }
+
+    ArrayList<Integer> indices = new ArrayList<>();
+    int bitString;
+    public void initializeZobrist(){
+        zobristTable = new int[169][3];
+        for(int i=0; i<169; i++){
+            for(int j=0; j<3; j++){
+                bitString =0;
+                for(int p=0; p<64; p++) {
+                    if((int)(Math.random()*100 % 1)==1)
+                        bitString+=Math.pow(2,p);
+                }
+                zobristTable[i][j]= bitString;
+            }
+        }
+    }
+    /**Esta funcion rehashea la tabla a partir de un solo cambio, la hice por si alguien
+     * la puede utilizar es una altarnativa mucho mas eficiente.
+     * */
+    public void reZobristHash(int hash, int x, int y, int player){
+        int index = x*13 +y;
+        if(index<0 || index>169)
+            throw new IllegalArgumentException("wrong x or y");
+        int newHash;
+        if(player == 0){
+            newHash = hash ^ zobristTable[index][indices.get(index)];
+            indices.set(index,0);
+            newHash = newHash ^ zobristTable[index][indices.get(index)];
+        }
+        else if(player == 1){
+            newHash = hash ^ zobristTable[index][indices.get(index)];
+            indices.set(index,1);
+            newHash = newHash ^ zobristTable[index][indices.get(index)];
+        }
+        else if(player == 2){
+            newHash = hash ^ zobristTable[index][indices.get(index)];
+            indices.set(index,2);
+            newHash = newHash ^ zobristTable[index][indices.get(index)];
+        }
+        else
+            throw new IllegalArgumentException("wrong player n");
+
+        hash = newHash;
+    }
+
+    public int zobristHash(){
+        int w = 0;
+        int b= 0;
+        int hash=0;
+        if(board == null)
+            System.out.println("board is null in zobristHash");
+
+        for(int i=0; i<13; i++){
+            for(int j=0; j<13; j++){
+                if(board[i][j] == null) {
+                    indices.add(0);
+                    continue;
+                }
+                if(board[i][j].getPlayer() == 1){
+                    indices.add(1);
+                    continue;
+                }
+                if(board[i][j].getPlayer() == 2){
+                    indices.add(2);
+                    continue;
+                }
+                System.out.println("nunca deberia llegar a una piedra con player 0?(Francisco Delgado)");
+                indices.add(0);
+
+            }
+        }
+
+        for(int i=0;i<169;i++){
+            hash = hash ^ zobristTable[i][indices.get(i)];
+        }
+        return hash;
     }
 }
