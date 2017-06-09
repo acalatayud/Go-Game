@@ -88,6 +88,7 @@ public class Board {
             int liberties = 4;
             HashSet<Chain> samePlayerChains = new HashSet<>(4);
             ArrayList<Stone> samePlayerStones = new ArrayList<>(4);
+            ArrayList<Stone> otherPlayerStones = new ArrayList<>(4);
             Stone neighbor = null;
             ArrayList<Stone> capturedStones;
             //TODO: Modularizar
@@ -136,12 +137,16 @@ public class Board {
                     samePlayerChains.add(neighbor.getChain());
                 }
                 else {
+                    otherPlayerStones.add(neighbor);
                     capturedStones = neighbor.decLiberties();
                     if(capturedStones != null) {
                         playerCaptures[player-1] += capturedStones.size();
                         chains.remove(capturedStones.get(0).getChain());
-                        for(Stone stone : capturedStones)
+                        for(Stone stone : capturedStones) {
+                            if(otherPlayerStones.contains(stone))
+                                liberties++;
                             board[stone.getY()][stone.getX()] = null;
+                        }
                         updateSurroundings(capturedStones);
                     }
                 }
@@ -392,8 +397,8 @@ public class Board {
         for(int y=0; y < 13; y++){
             ans+= "[";
             for(int x=0; x < 13; x++){
-                ans+=this.checkSpace(x,y);
                 ans+="   ";
+                ans+=this.checkSpace(x,y);
             }
             ans+= "]\n";
         }
