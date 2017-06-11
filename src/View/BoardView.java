@@ -28,8 +28,8 @@ public class BoardView {
     private boolean clickAvailable = true;
     private JFrame frame;
     int playerN;
-    ImageIcon blackStone = new ImageIcon("src/Sources/blackStone20.png");
-    ImageIcon whiteStone = new ImageIcon("src/Sources/whiteStone20.png");
+    ImageIcon blackStone = new ImageIcon("Sources/blackStone20.png");
+    ImageIcon whiteStone = new ImageIcon("Sources/whiteStone20.png");
     private JTextArea txtPlayern;
     private JTextArea player1Captures;
     private JTextArea player2Captures;
@@ -56,7 +56,7 @@ public class BoardView {
         containerPanel.setLayout(gbl);
         containerPanel.setSize(600, 650);
 
-        Image bg = Toolkit.getDefaultToolkit().createImage("src/Sources/Board600.png");
+        Image bg = Toolkit.getDefaultToolkit().createImage("Sources/Board600.png");
         stoneButtonsPanel = new ImagePanel(bg);
         stoneButtonsPanel.setSize(600,600);
         Dimension dim = new Dimension(600,600);
@@ -100,62 +100,6 @@ public class BoardView {
         txtPlayern.setColumns(10);
 
     }
-
-    /**
-     * same as the above but with no board.
-     */
-//    public BoardView(){
-//
-//        stoneButtons = new ArrayList<>();
-//        frame = new JFrame();
-//        frame.setResizable(false);
-//        frame.setBounds(300, 300, 610, 680);
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
-//
-//        JPanel containerPanel = new JPanel();
-//        frame.getContentPane().add(containerPanel);
-//        GridBagLayout gbl = new GridBagLayout();
-//        GridBagConstraints c = new GridBagConstraints();
-//        containerPanel.setLayout(gbl);
-//        containerPanel.setSize(600, 650);
-//
-//        Image bg = Toolkit.getDefaultToolkit().createImage("Sources/Board600.png");
-//        stoneButtonsPanel = new ImagePanel(bg);
-//        stoneButtonsPanel.setSize(600,600);
-//        Dimension dim = new Dimension(600,600);
-//        stoneButtonsPanel.setPreferredSize(dim);
-//        stoneButtonsPanel.setMaximumSize(dim);
-//        stoneButtonsPanel.setMinimumSize(dim);
-//        c.gridx = 0;
-//        c.gridy = 0;
-//        stoneButtonsPanel.setLayout(new GridLayout(13, 13, 0, 0));
-//        containerPanel.add(stoneButtonsPanel,c);
-//
-//
-//        bottomPanel = new JPanel();
-//        bottomPanel.setSize(600, 50);
-//        dim = new Dimension(600, 50);
-//        bottomPanel.setMinimumSize(dim);
-//        bottomPanel.setMaximumSize(dim);
-//        bottomPanel.setPreferredSize(dim);
-//        FlowLayout fl_bottomPanel = (FlowLayout) bottomPanel.getLayout();
-//        fl_bottomPanel.setAlignment(FlowLayout.LEFT);
-//        c.gridx = 0;
-//        c.gridy = 1;
-//        containerPanel.add(bottomPanel, c);
-//
-//        placeStones(null);
-//
-//        btnPass = new JButton("pass");
-//        btnPass.addActionListener(new ButtonListener());
-//        bottomPanel.add(btnPass);
-//
-//        playerN = 1;
-//        txtPlayern.setText("player 1");
-//        bottomPanel.add(txtPlayern);
-//        txtPlayern.setColumns(10);
-//    }
 
     /**Auxiliary method to place a board´s stones within the swing environment.
      * */
@@ -260,7 +204,7 @@ public class BoardView {
                 clickAvailable = false;
                 if (e.getSource() == btnPass) {
                     Controller.pass();
-                    return;
+
                 }
                 if (e.getSource() instanceof StoneButton) {
                     StoneButton button = (StoneButton) e.getSource();
