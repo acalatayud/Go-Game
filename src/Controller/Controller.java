@@ -183,7 +183,6 @@ public class Controller {
 		}
 		if(board.addPiece(x,y,player)) {
 			board.nextPlayer();
-			model.updateHashes();
 			boardView.update(board);
 			return true;
 		}

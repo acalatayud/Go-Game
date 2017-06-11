@@ -34,7 +34,10 @@ public class Board {
     
     //zobristTable indices: empty=0, black=1, white=2
     //169x3 table
-    private static int[][] zobristTable = null;
+    ArrayList<Integer> zobristIndices = new ArrayList<>();
+    private static long[][] zobristTable = null;
+    private long zorbistHash;
+    private long prevZobristHash;
     private int playerN = 1;
     private HashSet<Chain> chains;
     private int[] playerCaptures = new int[2];
@@ -50,10 +53,12 @@ public class Board {
 
 
     public Board(){
-        chains = new HashSet<Chain>();
         if(zobristTable == null)
             initializeZobrist();
 
+        chains = new HashSet<Chain>();
+        prevZobristHash = 0;
+        zorbistHash = zobristHash();
         playerCaptures[0] = 0;
         playerCaptures[1] = 0;
         playerPassed[0] = false;
@@ -62,6 +67,9 @@ public class Board {
 
     public Board duplicate() {
         Board newBoard = new Board();
+        newBoard.zobristIndices = (ArrayList<Integer>) zobristIndices.clone();
+        newBoard.prevZobristHash = prevZobristHash;
+        newBoard.zorbistHash = zorbistHash;
         newBoard.playerCaptures = playerCaptures.clone();
         newBoard.playerPassed = playerPassed.clone();
         newBoard.playerN = this.playerN;
@@ -83,7 +91,9 @@ public class Board {
         else
             playerN = 1;
     }
+
     public boolean addPiece(int x, int y, int player){
+        long newHash=0;
         if (!verifyMove(x, y, player)) {
           if(x == -1 && y == -1)
         		pass(player);
@@ -91,6 +101,10 @@ public class Board {
             return false;
         }
         else{
+
+            HashSet<Chain> oldChains = (HashSet<Chain>)chains.clone();
+            int[] oldPlayerCaptures = playerCaptures.clone();
+            Stone[][] oldBoard = board.clone();
             int liberties = 4;
             HashSet<Chain> samePlayerChains = new HashSet<>(4);
             ArrayList<Stone> samePlayerStones = new ArrayList<>(4);
@@ -151,13 +165,16 @@ public class Board {
                         for(Stone stone : capturedStones) {
                             if(otherPlayerStones.contains(stone))
                                 liberties++;
-                            board[stone.getY()][stone.getX()] = null;
+                            int stoneYIndex = stone.getY();
+                            int stoneXIndex = stone.getX();
+                            board[stoneYIndex][stoneXIndex] = null;
+                            newHash = zobristXor(newHash,stoneXIndex,stoneYIndex,0);
                         }
                         updateSurroundings(capturedStones);
                     }
                 }
             }
-
+            //capturedstones remuevo,
             Chain newChain = new Chain();
             for(Chain chain : samePlayerChains) {
                 newChain.join(chain);
@@ -168,13 +185,22 @@ public class Board {
 
             Stone stone = new Stone((byte)x, (byte)y, (byte)player, (byte)liberties, newChain);
             board[y][x] = stone;
+            newHash = zobristXor(newHash,x,y,player);
 
             for(Stone s : samePlayerStones)
                 s.decLiberties();
 
+            if(violatesKo(newHash)) {
+                System.out.println("violates ko");
+                chains = oldChains;
+                board = oldBoard;
+                playerCaptures =oldPlayerCaptures;
+                return false;
+            }
             playerPassed[0] = false;
             playerPassed[1] = false;
-            //System.out.println("piece was added to the model");
+
+            updateHashes(newHash);
             return true;
         }
     }
@@ -184,7 +210,7 @@ public class Board {
     }
 
     public boolean verifyMove(int x, int y, int player) {
-      return !(outOfBounds(x, y) || board[y][x]!= null || violatesSuicide(x, y, player) || violatesKo(x, y, player));
+      return !(outOfBounds(x, y) || board[y][x]!= null || violatesSuicide(x, y, player));
     }
 
     public boolean violatesSuicide(int x, int y, int player) {
@@ -238,8 +264,11 @@ public class Board {
         return true;
     }
 
-    public boolean violatesKo(int x, int y, int player) {
-        return false;
+    public boolean violatesKo(long newHash) {
+        if(newHash == prevZobristHash)
+            return true;
+        else
+            return false;
     }
 
     private void updateSurroundings(ArrayList<Stone> capturedStones) {
@@ -430,16 +459,17 @@ public class Board {
         return ans;
     }
 
-    ArrayList<Integer> indices = new ArrayList<>();
-    int bitString;
+
     public void initializeZobrist(){
-        zobristTable = new int[169][3];
+        long bitString;
+        zobristTable = new long[169][3];
         for(int i=0; i<169; i++){
             for(int j=0; j<3; j++){
                 bitString =0;
-                for(int p=0; p<64; p++) {
-                    if((int)(Math.random()*100 % 1)==1)
-                        bitString+=Math.pow(2,p);
+                for(int p=0; p<63; p++) {
+                    if(Math.random() > 0.5f)
+                        bitString +=(long)Math.pow(2, p);
+
                 }
                 zobristTable[i][j]= bitString;
             }
@@ -448,61 +478,64 @@ public class Board {
     /**Esta funcion rehashea la tabla a partir de un solo cambio, la hice por si alguien
      * la puede utilizar es una altarnativa mucho mas eficiente.
      * */
-    public void reZobristHash(int hash, int x, int y, int player){
-        int index = x*13 +y;
+    public long zobristXor(long oldHash, int x, int y, int player){
+        int index = y*13 +x;
         if(index<0 || index>169)
             throw new IllegalArgumentException("wrong x or y");
-        int newHash;
+        long newHash;
         if(player == 0){
-            newHash = hash ^ zobristTable[index][indices.get(index)];
-            indices.set(index,0);
-            newHash = newHash ^ zobristTable[index][indices.get(index)];
+            newHash = oldHash ^ zobristTable[index][zobristIndices.get(index)];
+            zobristIndices.set(index,0);
+            newHash = newHash ^ zobristTable[index][zobristIndices.get(index)];
         }
         else if(player == 1){
-            newHash = hash ^ zobristTable[index][indices.get(index)];
-            indices.set(index,1);
-            newHash = newHash ^ zobristTable[index][indices.get(index)];
+            newHash = oldHash ^ zobristTable[index][zobristIndices.get(index)];
+            zobristIndices.set(index,1);
+            newHash = newHash ^ zobristTable[index][zobristIndices.get(index)];
         }
         else if(player == 2){
-            newHash = hash ^ zobristTable[index][indices.get(index)];
-            indices.set(index,2);
-            newHash = newHash ^ zobristTable[index][indices.get(index)];
+            newHash = oldHash ^ zobristTable[index][zobristIndices.get(index)];
+            zobristIndices.set(index,2);
+            newHash = newHash ^ zobristTable[index][zobristIndices.get(index)];
         }
         else
             throw new IllegalArgumentException("wrong player n");
 
-        hash = newHash;
+        oldHash = newHash;
+        return oldHash;
     }
 
-    public int zobristHash(){
-        int w = 0;
-        int b= 0;
-        int hash=0;
-        if(board == null)
-            System.out.println("board is null in zobristHash");
+    public void updateHashes(){
+        prevZobristHash = zorbistHash;
+        zorbistHash = zobristHash();
+    }
 
-        for(int i=0; i<13; i++){
-            for(int j=0; j<13; j++){
-                if(board[i][j] == null) {
-                    indices.add(0);
-                    continue;
-                }
-                if(board[i][j].getPlayer() == 1){
-                    indices.add(1);
-                    continue;
-                }
-                if(board[i][j].getPlayer() == 2){
-                    indices.add(2);
-                    continue;
-                }
-                System.out.println("nunca deberia llegar a una piedra con player 0?(Francisco Delgado)");
-                indices.add(0);
+    public void updateHashes(long newHash){
+        prevZobristHash = zorbistHash;
+        zorbistHash = newHash;
+    }
 
+    public long zobristHash(){
+        long hash=0;
+        for(int y=0; y<13; y++){
+            for(int x=0; x<13; x++){
+                if(board[y][x] == null) {
+                    zobristIndices.add(0);
+                    continue;
+                }
+                if(board[y][x].getPlayer() == 1){
+                    zobristIndices.add(1);
+                    continue;
+                }
+                if(board[y][x].getPlayer() == 2){
+                    zobristIndices.add(2);
+                    continue;
+                }
             }
         }
 
         for(int i=0;i<169;i++){
-            hash = hash ^ zobristTable[i][indices.get(i)];
+            hash = hash ^ zobristTable[i][zobristIndices.get(i)];
         }
         return hash;
     }

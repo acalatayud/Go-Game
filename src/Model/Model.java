@@ -12,7 +12,7 @@ import java.util.Random;
 public class Model {
 
     Board board;
-    int[][] koBoard;
+    //int[][] koBoard;
 
     private static int[][][] influenceMaps = new int[2][Constants.boardSize][Constants.boardSize];
     private static int lastMap = 0;
@@ -28,7 +28,6 @@ public class Model {
         this.board = board;
         if(board ==null)
             System.out.println("board in model is null");
-        this.hash = board.zobristHash();
     }
 
     public static int ponderHeuristicValue(Board board, int player){//por el momento dejo static
@@ -409,7 +408,6 @@ public class Model {
                     board.pass(playerTurn);
                 else
                     board = auxBoard;
-                    updateHashes(board);
                 board.nextPlayer();
                 Controller.Controller.updateView(board);
             }
@@ -426,43 +424,22 @@ public class Model {
         System.out.println(move);
     }
 
-    public void storeKO(Board board){
-        for(int i=0;i<Constants.boardSize;i++){
-            for(int j=0;j<Constants.boardSize;j++){
-                koBoard[i][j] = board.checkSpace(j,i);
-            }
-        }
-    }
-
-    public boolean violatesKO(Board board){
-        for(int i=0;i<Constants.boardSize;i++){
-            for(int j=0;j<Constants.boardSize;j++){
-                if (board.checkSpace(j,i)!=koBoard[j][i])
-                    return false;
-            }
-        }
-        return true;
-    }
-
-
-
-    int bitString;
-    int prevPrevHash = 0;
-    int prevHash = 0;
-    int hash = 0;
-
-    public void updateHashes(Board board){
-        prevPrevHash = prevHash;
-        prevHash = hash;
-        hash = board.hashCode();
-
-    }
-
-    public void updateHashes(){
-        prevPrevHash = prevHash;
-        prevHash = hash;
-        hash = board.hashCode();
-    }
-
+//    public void storeKO(Board board){
+//        for(int i=0;i<Constants.boardSize;i++){
+//            for(int j=0;j<Constants.boardSize;j++){
+//                koBoard[i][j] = board.checkSpace(j,i);
+//            }
+//        }
+//    }
+//
+//    public boolean violatesKO(Board board){
+//        for(int i=0;i<Constants.boardSize;i++){
+//            for(int j=0;j<Constants.boardSize;j++){
+//                if (board.checkSpace(j,i)!=koBoard[j][i])
+//                    return false;
+//            }
+//        }
+//        return true;
+//    }
 
 }
