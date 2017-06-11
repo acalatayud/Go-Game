@@ -4,6 +4,7 @@ import Service.Constants;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.HashMap;
 
 /**
  * The board is represented by a HashSet of player Pieces, a HashSet of AI Pieces,
@@ -31,7 +32,7 @@ public class Board {
             return result;
         }
     }*/
-    
+
     //zobristTable indices: empty=0, black=1, white=2
     //169x3 table
     ArrayList<Integer> zobristIndices = new ArrayList<>();
@@ -215,7 +216,9 @@ public class Board {
 
     public boolean violatesSuicide(int x, int y, int player) {
         Stone neighbor = null;
+        Chain neighborChain = null;
         HashSet<Chain> chains = new HashSet<>(4);
+        HashMap<Chain,Integer> enemyChains = new HashMap<>();
         int stoneCount = 0;
 
         for(int i=0; i<4 ; i++){
@@ -245,11 +248,18 @@ public class Board {
             if(neighbor == null)
                 return false;
 
+            neighborChain = neighbor.getChain();
+
             if(neighbor.getPlayer() == player) {
-                chains.add(neighbor.getChain());
+                chains.add(neighborChain);
                 stoneCount++;
             }
-
+            else {
+              if(!enemyChains.containsKey(neighborChain))
+                  enemyChains.put(neighborChain, (int)neighborChain.getLiberties()-1);
+              else
+                  enemyChains.put(neighborChain, enemyChains.get(neighborChain)-1);
+            }
         }
 
         if(stoneCount != 0){
@@ -260,6 +270,9 @@ public class Board {
             if(liberties != stoneCount)
                 return false;
         }
+
+        if(enemyChains.containsValue(0))
+            return false;
 
         return true;
     }
