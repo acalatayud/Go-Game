@@ -398,21 +398,22 @@ public class Board {
     }
 
     private ArrayList<ArrayList<Integer>> floodFill(Board mockBoard, Board realBoard, int xPos, int yPos, ArrayList<ArrayList<Integer>> borders){
-        int space;
         if( xPos<0 || xPos>12 || yPos<0 || yPos>12){
             borders.get(0).add(0);
             return borders;
         }
+        int rb = realBoard.checkSpace(xPos,yPos);
         if (mockBoard.checkSpace(xPos,yPos)==1) {// If space is already visited.
-            borders.get(0).add(realBoard.checkSpace(xPos,yPos));
+            if(rb!=0)
+                borders.get(0).add(rb);
             return borders;
         }
         else {
             mockBoard.addPiece(xPos, yPos, 1); // Mark as visited.
         }
 
-        if ((space=realBoard.checkSpace(xPos,yPos))!=0){
-            borders.get(0).add(space);
+        if (rb!=0){
+            borders.get(0).add(rb);
             return borders;
         }
         else
