@@ -214,6 +214,10 @@ public class Board {
       return !(outOfBounds(x, y) || board[y][x]!= null || violatesSuicide(x, y, player));
     }
 
+    public boolean lightVerifyMove(int x, int y, int player) {
+        return !(board[y][x]!= null || violatesSuicide(x, y, player));
+    }
+
     public boolean violatesSuicide(int x, int y, int player) {
         Stone neighbor = null;
         Chain neighborChain = null;
@@ -330,7 +334,6 @@ public class Board {
 
     public void pass(int player){
         playerPassed[player-1] = true; //TODO: Resetear si en el turno siguiente no pasa
-        nextPlayer();
     }
 
     public boolean gameFinished(){
@@ -436,7 +439,7 @@ public class Board {
         int winner;
         if ( (winner = territory[0]+playerCaptures[0] - (territory[1]+playerCaptures[1])) == 0)
             return winner;
-        System.out.println(winner);
+        //System.out.println(winner);
         return winner > 0 ? 1 : 2;
     }
 

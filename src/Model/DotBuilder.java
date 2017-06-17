@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class DotBuilder
 {
-	private Map<Integer, Integer> nodes;
+	private Map<Node, Integer> nodes;
 	private FileWriter output;
 	private int size;
 	private int startingPlayer;
@@ -29,8 +29,8 @@ public class DotBuilder
 	
 	public void addNode(Node node)
 	{
-		if(!nodes.containsKey(node.hashCode()))		
-			nodes.put(node.hashCode(), ++size);
+		if(!nodes.containsKey(node))
+			nodes.put(node, ++size);
 	}
 	
 	public void addEdge(Node father, Node child)
@@ -39,7 +39,7 @@ public class DotBuilder
 		addNode(child);
 		try
 		{
-			output.write(nodes.get(father.hashCode()) + " -> " + nodes.get(child.hashCode()) + "\n");
+			output.write(nodes.get(father) + " -> " + nodes.get(child) + "\n");
 		} catch (IOException e)
 		{
 			return;
@@ -51,7 +51,7 @@ public class DotBuilder
 		addNode(node);
 		try
 		{
-			output.write(nodes.get(node.hashCode()) + " [color = " + color + ", style = filled ]\n");
+			output.write(nodes.get(node) + " [color = " + color + ", style = filled ]\n");
 		} catch (IOException e)
 		{
 			return;
@@ -64,7 +64,7 @@ public class DotBuilder
 		try
 		{
 			if(node.getxPos() == -2)
-				output.write(nodes.get(node.hashCode()) + " [label = \"" + getLabel(node) +"\", shape = " + getShape(node) + ",color = red, style = filled ]\n");
+				output.write(nodes.get(node) + " [label = \"" + getLabel(node) +"\", shape = " + getShape(node) + ",color = red, style = filled ]\n");
 			else
 				output.write(getOutput(node));
 		} catch (IOException e)
@@ -75,7 +75,7 @@ public class DotBuilder
 	
 	public String getOutput(Node node)
 	{
-		String out = nodes.get(node.hashCode()) + " [label =  \"" + getLabel(node) + "\" , shape = " + getShape(node);
+		String out = nodes.get(node) + " [label =  \"" + getLabel(node) + "\" , shape = " + getShape(node);
 		if(node.getColor() != 0)
 			out += ",color = " + getColor(node) + ", style = filled";
 		out += "]\n";

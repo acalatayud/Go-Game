@@ -19,7 +19,6 @@ import View.BoardView;
  */
 public class Controller {
 	private static int AIPlayer = 2;
-	private static Board board;
 	private static Model model;
 	private static BoardView boardView;
 	private static int playerN; // this variable is not updated by all controller functions thus becoming useless after initiation.
@@ -30,6 +29,7 @@ public class Controller {
 	public static void main(String[] args){
 
 		ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
+		Board board = null;
 		try {
 			if (argsList.size() < 3)
 				throw new IllegalArgumentException();
@@ -132,25 +132,24 @@ public class Controller {
 
 
 
-		if(board == null) {
+		if(board == null)
 			board = new Board();
-			boardView = new BoardView();
-			boardView.update(board);
-
-			//initializes the app window.
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						boardView.initFrame();
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		}
 		
 		model = new Model(board);
+		boardView = new BoardView();
+		boardView.update(model.getBoard());
+
+		//initializes the app window.
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					boardView.initFrame();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
 		if (visual != -1) {
 			playerN = 1;
@@ -177,13 +176,8 @@ public class Controller {
 		System.out.println(y);
 		System.out.println("player:"+player);
 
-		//para que si le toca al AI no pueda jugar.
-		if(player == AIPlayer){
-			return false;
-		}
-		if(board.addPiece(x,y,player)) {
-			board.nextPlayer();
-			boardView.update(board);
+		if(model.addPiece(x,y,player)) {
+			boardView.update(model.getBoard());
 			return true;
 		}
 		else
@@ -197,7 +191,7 @@ public class Controller {
 	/**The controller tells the model that a player has passed and updates the player.
 	 * */
 	public static void pass(){
-		board.pass(playerN);
+		model.pass(playerN);
 	}
 
 	// no se que hace, la deje por las dudas.

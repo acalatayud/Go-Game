@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class Model {
 
-    Board board;
+    private Board board;
     //int[][] koBoard;
 
     private static int[][][] influenceMaps = new int[2][Constants.boardSize][Constants.boardSize];
@@ -30,6 +30,28 @@ public class Model {
             System.out.println("board in model is null");
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
+    public boolean addPiece(int x, int y, int player) {
+        if(player == board.getPlayerN() && board.addPiece(x, y, player)) {
+            board.nextPlayer();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean pass(int player) {
+        if(player == board.getPlayerN()) {
+            board.pass(player);
+            board.nextPlayer();
+            return true;
+        }
+        return false;
+    }
+
+    @Deprecated
     public static int ponderHeuristicValue(Board board, int player){//por el momento dejo static
         Stone[][] stones = board.getBoard();
         for (int y = 0; y < Constants.boardSize; y++) {
@@ -392,9 +414,11 @@ public class Model {
 
     public void gameLoop(){
 
+        AI ai = new AI(2);
+
         while(!board.gameFinished()){
             try {
-                Thread.sleep(1);
+                Thread.sleep(10);
             }
             catch (Exception e){
                 continue;
@@ -403,12 +427,23 @@ public class Model {
             //System.out.println(playerTurn);
             if(playerTurn == 2) {
                 System.out.println("entro al if");
-                Board auxBoard = getAIMove(board);
-                if (auxBoard == null)
+                //Board copy = board.duplicate();
+                //System.out.println(board);
+                //System.out.println(board.duplicate());
+                long start = System.nanoTime();
+                //Board auxBoard = getAIMove(board);
+                System.out.println((System.nanoTime() - start)/1000000);
+                start = System.nanoTime();
+                System.out.println(board);
+                board = ai.getMove(board);
+                System.out.println(board);
+                System.out.println((System.nanoTime() - start)/1000000);
+                /*if (auxBoard == null)
                     board.pass(playerTurn);
                 else
-                    board = auxBoard;
+                    board = auxBoard;*/
                 board.nextPlayer();
+                System.out.println(board.getPlayerN());
                 Controller.Controller.updateView(board);
             }
 

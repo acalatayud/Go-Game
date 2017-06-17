@@ -22,7 +22,7 @@ public class GameTree {
     }
 
     /**
-     * Construye el árbol y retorna el Node representando
+     * Construye el ï¿½rbol y retorna el Node representando
      * la mejor jugada encontrada,
      * @return Node
      */
@@ -121,6 +121,8 @@ public class GameTree {
         }
         return best;
     }
+
+
 
     public ArrayList<Node> generateMoves(Board board, int player) {
         ArrayList<Node> moves = new ArrayList<>();
