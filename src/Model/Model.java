@@ -431,7 +431,7 @@ public class Model {
             if(board.getPlayerN() == AIplayer) {
                 System.out.println("entro al if");
                 long start = System.nanoTime();
-                board = ai.getMove(board);
+                board = ai.getMove(board).board;
                 System.out.println((System.nanoTime() - start)/1000000);
                 board.nextPlayer();
                 Controller.updateView(board);
@@ -443,10 +443,9 @@ public class Model {
         System.out.println("winner is: "+winner);
     }
 
-    public void executeFileMode(int player){
-        GameTree tree = new GameTree(board,player);
-        Node move = tree.buildTree(board);
-        System.out.println(move);
+    public void executeFileMode(){
+        AI ai = new AI(AIplayer);
+        System.out.println(ai.getMove(board));
     }
 
 //    public void storeKO(Board board){

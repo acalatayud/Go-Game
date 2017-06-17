@@ -28,7 +28,7 @@ public class Controller {
 
 		ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
 		Board board = null;
-		int playerN = 1;
+		int AIplayer = 2;
 		try {
 			if (argsList.size() < 3)
 				throw new IllegalArgumentException();
@@ -58,8 +58,8 @@ public class Controller {
 
 				if (player!=-1){
 					try {
-						playerN = Integer.parseInt(argsList.get(player + 1));
-						if (playerN!=1&&playerN!=2)
+						AIplayer = Integer.parseInt(argsList.get(player + 1));
+						if (AIplayer!=1&&AIplayer!=2)
 							throw new NumberFormatException();
 					}
 					catch (NumberFormatException e){
@@ -133,12 +133,6 @@ public class Controller {
 		if(board == null)
 			board = new Board();
 
-		int AIplayer;
-		if(playerN == 1)
-			AIplayer = 2;
-		else
-			AIplayer = 1;
-
 
 		model = new Model(board, AIplayer);
 		boardView = new BoardView();
@@ -160,7 +154,7 @@ public class Controller {
 			model.gameLoop();
 		}
 		else{
-			model.executeFileMode(playerN);
+			model.executeFileMode();
 		}
 
 

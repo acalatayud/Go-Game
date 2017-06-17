@@ -16,8 +16,8 @@ public class AI {
     private int[] yOff = {0,0,-1,1};
     private int influenceWeight = 1;
     private int potentialTerritoryWeight = 10;
-    private int territoryWeight = 100;
-    private int captureWeight = 100;
+    private int territoryWeight = 200;
+    private int captureWeight = 200;
     private int player;
     private boolean scoutLayer;
     private DotBuilder dot;
@@ -29,14 +29,14 @@ public class AI {
             dot = new DotBuilder(player);
     }
 
-    public Board getMove(Board board) {
+    public Move getMove(Board board) {
         historyMap = new int[2][Parameters.boardSize][Parameters.boardSize]; //Reducir de 3 a 2
         int otherPlayer = player == 1 ? 2 : 1;
         Move current = new Move(board, otherPlayer);
         if(Parameters.depth > 1)
             scoutLayer = true;
         Move bestMove = negamax(current, Parameters.depth, Parameters.worstValue, Parameters.bestValue, player);
-        return bestMove.board;
+        return bestMove;
     }
 
     private Move negamax(Move move, int depth, int alpha, int beta, int player) {
@@ -63,18 +63,21 @@ public class AI {
 
         Move bestMove = new Move(Parameters.worstValue);
         for(Move child : children) {
-            if(child.board == null) {
-                child.board = board.duplicate();
-                child.board.addPiece(child.x, child.y, player);
-            }
-            child.value = -negamax(child, depth-1, -beta, -alpha, otherPlayer).value;
+            if(beta > alpha) {
+                if (child.board == null) {
+                    child.board = board.duplicate();
+                    child.board.addPiece(child.x, child.y, player);
+                }
+                child.value = -negamax(child, depth - 1, -beta, -alpha, otherPlayer).value;
 
-            if(child.value > bestMove.value)
-                bestMove = child;
-            if(child.value > alpha)
-                alpha = child.value;
-            if(alpha >= beta)
-                break;
+                if (child.value > bestMove.value)
+                    bestMove = child;
+                if (child.value > alpha)
+                    alpha = child.value;
+            }
+            else
+                child.pruned = true;
+
         }
         if(bestMove.board != passBoard )
             historyMap[player-1][bestMove.y][bestMove.x] += depth*depth;
