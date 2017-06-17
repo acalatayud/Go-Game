@@ -7,15 +7,19 @@ public class Move implements Comparable{
     public int weight;
     public Board board;
     public int id;
+    public int player;
+    public boolean pruned;
 
-    public Move(int x, int y, int weight) {
+    public Move(int x, int y, int weight, int player) {
         this.x = x;
         this.y = y;
         this.weight = weight;
+        this.player = player;
     }
 
-    public Move(Board board) {
+    public Move(Board board, int player) {
         this.board = board;
+        this.player = player;
     }
 
     public Move(int value) {

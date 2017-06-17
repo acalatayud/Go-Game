@@ -30,8 +30,9 @@ public class AI {
     }
 
     public Board getMove(Board board) {
-        historyMap = new int[3][Parameters.boardSize][Parameters.boardSize]; //Reducir de 3 a 2
-        Move current = new Move(board);
+        historyMap = new int[2][Parameters.boardSize][Parameters.boardSize]; //Reducir de 3 a 2
+        int otherPlayer = player == 1 ? 2 : 1;
+        Move current = new Move(board, otherPlayer);
         if(Parameters.depth > 1)
             scoutLayer = true;
         Move bestMove = negamax(current, Parameters.depth, Parameters.worstValue, Parameters.bestValue, player);
@@ -58,7 +59,7 @@ public class AI {
         }
         Board passBoard = board.duplicate();
         passBoard.pass(player);
-        children.addFirst(new Move(passBoard));
+        children.addFirst(new Move(passBoard, player));
 
         Move bestMove = new Move(Parameters.worstValue);
         for(Move child : children) {
@@ -76,7 +77,7 @@ public class AI {
                 break;
         }
         if(bestMove.board != passBoard )
-            historyMap[player][bestMove.y][bestMove.x] += depth*depth;
+            historyMap[player-1][bestMove.y][bestMove.x] += depth*depth;
 
         return bestMove;
     }
@@ -92,7 +93,7 @@ public class AI {
         LinkedList<Move> children = generateMoves(board, player);
         Board passBoard = board.duplicate();
         passBoard.pass(player);
-        children.addFirst(new Move(passBoard));
+        children.addFirst(new Move(passBoard, player));
 
         Move bestMove = new Move(Parameters.worstValue);
         for(Move child : children) {
@@ -114,7 +115,7 @@ public class AI {
         for(int y = 0; y < Parameters.boardSize ; y++){
             for(int x = 0; x < Parameters.boardSize ; x++){
                 if (board.lightVerifyMove(x,y,player)){
-                    moves.add(new Move(x, y, historyMap[player][y][x]));
+                    moves.add(new Move(x, y, historyMap[player-1][y][x], player));
                 }
             }
         }

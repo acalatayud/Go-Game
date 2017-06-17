@@ -17,7 +17,6 @@ import View.BoardView;
  * Created by juan on 23/05/17.
  */
 public class Controller {
-	private static int AIPlayer = 2;
 	private static Model model;
 	private static BoardView boardView;
 	//private static int playerN; // this variable is not updated by all controller functions thus becoming useless after initiation.
