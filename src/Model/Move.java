@@ -42,7 +42,7 @@ public class Move implements Comparable{
     public String toString() {
         if(start)
             return "START";
-        if(board.passed(player))
+        if(board != null && board.passed(player))
             return "PASS";
         return "(" + x +", " + y +")";
     }

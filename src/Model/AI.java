@@ -41,6 +41,9 @@ public class AI {
         }
         else
             bestMove = negamaxNoPrune(current, Parameters.depth, player);
+        if(Parameters.dotTree) {
+        	dot.close();
+        }        
         return bestMove;
     }
 
@@ -82,10 +85,21 @@ public class AI {
             }
             else
                 child.pruned = true;
+            
+            if(Parameters.dotTree) {
+        		dot.addEdge(move, child);
+        		dot.setLabel(child);
+        	}
 
         }
         if(bestMove.board != passBoard )
             historyMap[player-1][bestMove.y][bestMove.x] += depth*depth;
+        
+        move.value = bestMove.value;
+        if(Parameters.dotTree) {
+            	dot.changeColor(bestMove, "red");
+            	dot.setLabel(move);
+            }
 
         return bestMove;
     }
@@ -113,6 +127,17 @@ public class AI {
 
             if(child.value > bestMove.value)
                 bestMove = child;
+            
+            if(Parameters.dotTree) {
+            	dot.addEdge(move, child);
+            	dot.setLabel(child);
+            }
+        }
+        
+        move.value = bestMove.value;
+        if(Parameters.dotTree) {
+        	dot.changeColor(bestMove, "red");
+        	dot.setLabel(move);
         }
 
         return bestMove;

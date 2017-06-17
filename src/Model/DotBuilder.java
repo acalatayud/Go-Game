@@ -2,14 +2,11 @@ package Model;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DotBuilder
 {
-	private Map<Node, Integer> nodes;
 	private FileWriter output;
-	private int size;
+	private int id;
 	private int startingPlayer;
 
 	public DotBuilder(int player)
@@ -22,49 +19,48 @@ public class DotBuilder
 		{
 			output = null;
 		}
-		size = 0;
-		nodes = new HashMap<>();
+		id = 0;
 		startingPlayer= player;
 	}
-	
-	public void addNode(Node node)
+
+	public void addNode(Move node)
 	{
-		if(!nodes.containsKey(node))
-			nodes.put(node, ++size);
+		if(node.id == 0)
+			node.id = ++id;
 	}
-	
-	public void addEdge(Node father, Node child)
+
+	public void addEdge(Move father, Move child)
 	{
 		addNode(father);
 		addNode(child);
 		try
 		{
-			output.write(nodes.get(father) + " -> " + nodes.get(child) + "\n");
+			output.write(father.id + " -> " + child.id + "\n");
 		} catch (IOException e)
 		{
 			return;
 		}
 	}
-	
-	public void changeColor(Node node, String color)
+
+	public void changeColor(Move node, String color)
 	{
 		addNode(node);
 		try
 		{
-			output.write(nodes.get(node) + " [color = " + color + ", style = filled ]\n");
+			output.write(node.id + " [color = " + color + ", style = filled ]\n");
 		} catch (IOException e)
 		{
 			return;
 		}
 	}
-	
-	public void setLabel(Node node)
+
+	public void setLabel(Move node)
 	{
 		addNode(node);
 		try
 		{
-			if(node.getxPos() == -2)
-				output.write(nodes.get(node) + " [label = \"" + getLabel(node) +"\", shape = " + getShape(node) + ",color = red, style = filled ]\n");
+			if(node.start)
+				output.write(node.id + " [label = \"" + getLabel(node) +"\", shape = " + getShape(node) + ",color = red, style = filled ]\n");
 			else
 				output.write(getOutput(node));
 		} catch (IOException e)
@@ -72,39 +68,27 @@ public class DotBuilder
 			return;
 		}
 	}
-	
-	public String getOutput(Node node)
+
+	public String getOutput(Move node)
 	{
-		String out = nodes.get(node) + " [label =  \"" + getLabel(node) + "\" , shape = " + getShape(node);
-		if(node.getColor() != 0)
-			out += ",color = " + getColor(node) + ", style = filled";
+		String out = node.id + " [label =  \"" + getLabel(node) + "\" , shape = " + getShape(node);
+		if(node.pruned)
+			out += ",color = grey, style = filled";
 		out += "]\n";
-		return out;	
+		return out;
 	}
-	
-	private String getLabel(Node node)
+
+	private String getLabel(Move node)
 	{
 		String ret = node.toString();
-		if(node.getColor() != 2)
-			ret+= " " + node.getHeuristicValue();
+		if(!node.pruned)
+			ret+= " " + node.value;
 		return ret;
 	}
-	
-	private String getColor(Node node)
+
+	private String getShape(Move node)
 	{
-		switch(node.getColor()){
-			case 1:
-				return "red";
-			case 2:
-				return "grey";
-			default:
-				return "white";
-		}
-	}
-	
-	private String getShape(Node node)
-	{
-		return node.getPlayer() != startingPlayer? "rectangle" : "ellipse";
+		return node.player != startingPlayer? "rectangle" : "ellipse";
 	}
 
 	public void close()
