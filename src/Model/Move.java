@@ -9,7 +9,7 @@ public class Move implements Comparable{
     public int id;
     public int player;
     public boolean pruned;
-    public boolean empty;
+    public boolean start;
 
     public Move(int x, int y, int weight, int player) {
         this.x = x;
@@ -21,7 +21,8 @@ public class Move implements Comparable{
     public Move(Board board, int player) {
         this.board = board;
         this.player = player;
-        this.empty = true;
+        if(!board.passed(player))
+            this.start = true;
     }
 
     public Move(int value) {
@@ -39,12 +40,12 @@ public class Move implements Comparable{
 
     @Override
     public String toString() {
-        if(empty) {
-            if(board.passed(player))
-                return "PASS";
-            else
-                return "START";
-        }
+        if(start)
+            return "START";
+        if(board.passed(player))
+            return "PASS";
         return "(" + x +", " + y +")";
     }
+
+
 }
