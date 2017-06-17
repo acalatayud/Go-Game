@@ -1,6 +1,6 @@
 package Model;
 
-import Service.Constants;
+import Service.Parameters;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,7 +42,7 @@ public class Board {
     private int playerN = 1;
     private HashSet<Chain> chains;
     private int[] playerCaptures = new int[2];
-    private Stone[][] board = new Stone[Constants.boardSize][Constants.boardSize];
+    private Stone[][] board = new Stone[Parameters.boardSize][Parameters.boardSize];
     private boolean[] playerPassed = new boolean[2];
 
     public Stone[][] getBoard(){
@@ -126,7 +126,7 @@ public class Board {
                         neighbor = board[y][x-1];
                         break;
                     case 1:
-                        if(x == Constants.boardSize - 1) {
+                        if(x == Parameters.boardSize - 1) {
                             liberties--;
                             continue;
                         }
@@ -140,7 +140,7 @@ public class Board {
                         neighbor = board[y-1][x];
                         break;
                     case 3:
-                        if(y == Constants.boardSize - 1) {
+                        if(y == Parameters.boardSize - 1) {
                             liberties--;
                             continue;
                         }
@@ -207,7 +207,7 @@ public class Board {
     }
 
     public boolean outOfBounds(int x, int y) {
-        return x < 0 || x >= Constants.boardSize || y < 0 || y >= Constants.boardSize;
+        return x < 0 || x >= Parameters.boardSize || y < 0 || y >= Parameters.boardSize;
     }
 
     public boolean verifyMove(int x, int y, int player) {
@@ -233,7 +233,7 @@ public class Board {
                     neighbor = board[y][x-1];
                     break;
                 case 1:
-                    if(x == Constants.boardSize - 1)
+                    if(x == Parameters.boardSize - 1)
                         continue;
                     neighbor = board[y][x+1];
                     break;
@@ -243,7 +243,7 @@ public class Board {
                     neighbor = board[y-1][x];
                     break;
                 case 3:
-                    if(y == Constants.boardSize - 1)
+                    if(y == Parameters.boardSize - 1)
                         continue;
                     neighbor = board[y+1][x];
                     break;
@@ -302,7 +302,7 @@ public class Board {
                         neighbor = board[y][x - 1];
                         break;
                     case 1:
-                        if (x == Constants.boardSize - 1)
+                        if (x == Parameters.boardSize - 1)
                             continue;
                         neighbor = board[y][x + 1];
                         break;
@@ -312,7 +312,7 @@ public class Board {
                         neighbor = board[y - 1][x];
                         break;
                     case 3:
-                        if (y == Constants.boardSize - 1)
+                        if (y == Parameters.boardSize - 1)
                             continue;
                         neighbor = board[y + 1][x];
                         break;
@@ -369,8 +369,8 @@ public class Board {
         boolean player1=false;
         boolean player2=false;
 
-        for (int i=0; i< Constants.boardSize; i++){
-            for (int j=0; j<Constants.boardSize; j++){
+        for (int i = 0; i< Parameters.boardSize; i++){
+            for (int j = 0; j< Parameters.boardSize; j++){
                 if (mockBoard.checkSpace(i,j)==0)
                     floodFill(mockBoard,this,i,j,borders);
 

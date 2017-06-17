@@ -3,7 +3,7 @@ package Service;
 /**
  * Created by juan on 23/05/17.
  */
-public class Constants {
+public class Parameters {
     public static final int boardSize = 13;
     public static int maxTime = -1; // Expressed in seconds
     public static int depth = -1;

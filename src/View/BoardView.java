@@ -2,27 +2,17 @@ package View;
 import Controller.Controller;
 import Model.Board;
 import Model.Stone;
-import Service.Constants;
-
-import java.awt.EventQueue;
+import Service.Parameters;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.CardLayout;
-import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import javax.swing.JButton;
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-import javax.swing.JTextField;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class BoardView {
     private boolean clickAvailable = true;
@@ -42,7 +32,7 @@ public class BoardView {
      * Create the application and initialize it.
      */
     public BoardView() {
-        stoneButtons = new StoneButton[Constants.boardSize][Constants.boardSize];
+        stoneButtons = new StoneButton[Parameters.boardSize][Parameters.boardSize];
         frame = new JFrame();
         frame.setResizable(false);
         frame.setBounds(300, 300, 610, 680);

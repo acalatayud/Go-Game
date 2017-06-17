@@ -1,10 +1,8 @@
 package Model;
 
-import Service.Constants;
+import Service.Parameters;
 import Controller.Controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -15,7 +13,7 @@ public class Model {
     private Board board;
     //int[][] koBoard;
 
-    private static int[][][] influenceMaps = new int[2][Constants.boardSize][Constants.boardSize];
+    private static int[][][] influenceMaps = new int[2][Parameters.boardSize][Parameters.boardSize];
     private static int lastMap = 0;
     private static int[] xOff = {-1,1,0,0};
     private static int[] yOff = {0,0,-1,1};
@@ -60,8 +58,8 @@ public class Model {
     @Deprecated
     public static int ponderHeuristicValue(Board board, int player){//por el momento dejo static
         Stone[][] stones = board.getBoard();
-        for (int y = 0; y < Constants.boardSize; y++) {
-            for (int x = 0; x < Constants.boardSize; x++) {
+        for (int y = 0; y < Parameters.boardSize; y++) {
+            for (int x = 0; x < Parameters.boardSize; x++) {
                 if(stones[y][x] != null) {
                     if(stones[y][x].getPlayer() == player)
                         influenceMaps[0][y][x] = 500;
@@ -142,16 +140,16 @@ public class Model {
                         {0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-        for (int y = 0; y < Constants.boardSize; y++) {
-            for (int x = 0; x < Constants.boardSize; x++) {
+        for (int y = 0; y < Parameters.boardSize; y++) {
+            for (int x = 0; x < Parameters.boardSize; x++) {
                 influenceMaps[0][y][x] = in[y][x];
             }
         }
 
         dilation(2);
 
-        for (int y = 0; y < Constants.boardSize; y++) {
-            for (int x = 0; x < Constants.boardSize; x++) {
+        for (int y = 0; y < Parameters.boardSize; y++) {
+            for (int x = 0; x < Parameters.boardSize; x++) {
                 if(influenceMaps[lastMap][y][x] != out[y][x]) {
                     System.out.println("DILATION FAILED | value is "+influenceMaps[lastMap][y][x]+" and should be "+out[y][x]);
                 }
@@ -176,8 +174,8 @@ public class Model {
                 {0,0,0,0,0,0,0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-        for (int y = 0; y < Constants.boardSize; y++) {
-            for (int x = 0; x < Constants.boardSize; x++) {
+        for (int y = 0; y < Parameters.boardSize; y++) {
+            for (int x = 0; x < Parameters.boardSize; x++) {
                 influenceMaps[0][y][x] = in[y][x];
             }
         }
@@ -214,8 +212,8 @@ public class Model {
     private static int calculateInfluence() {
         int value;
         int influencePoints = 0;
-        for (int y = 0; y < Constants.boardSize; y++) {
-            for (int x = 0; x < Constants.boardSize; x++) {
+        for (int y = 0; y < Parameters.boardSize; y++) {
+            for (int x = 0; x < Parameters.boardSize; x++) {
                 value = influenceMaps[lastMap][y][x];
                 if(value != 0) {
                     if(value > 0) {
@@ -243,8 +241,8 @@ public class Model {
         String ANSI_WHITE = "\u001B[37m";
         String color;
 
-        for (int y = 0; y < Constants.boardSize; y++) {
-            for (int x = 0; x < Constants.boardSize; x++) {
+        for (int y = 0; y < Parameters.boardSize; y++) {
+            for (int x = 0; x < Parameters.boardSize; x++) {
                 if(influenceMaps[lastMap][y][x] > 0)
                     color = ANSI_GREEN;
                 else if(influenceMaps[lastMap][y][x] < 0)
@@ -272,8 +270,8 @@ public class Model {
             int negativeNeighbors;
             int value;
 
-            for (int y = 0; y < Constants.boardSize; y++) {
-                for (int x = 0; x < Constants.boardSize; x++) {
+            for (int y = 0; y < Parameters.boardSize; y++) {
+                for (int x = 0; x < Parameters.boardSize; x++) {
                     positiveNeighbors = 0;
                     negativeNeighbors = 0;
 
@@ -284,7 +282,7 @@ public class Model {
                                     continue;
                                 break;
                             case 1:
-                                if (x == Constants.boardSize - 1)
+                                if (x == Parameters.boardSize - 1)
                                     continue;
                                 break;
                             case 2:
@@ -292,7 +290,7 @@ public class Model {
                                     continue;
                                 break;
                             case 3:
-                                if (y == Constants.boardSize - 1)
+                                if (y == Parameters.boardSize - 1)
                                     continue;
                                 break;
                         }
@@ -340,8 +338,8 @@ public class Model {
             int value;
             int diff;
 
-            for (int y = 0; y < Constants.boardSize; y++) {
-                for (int x = 0; x < Constants.boardSize; x++) {
+            for (int y = 0; y < Parameters.boardSize; y++) {
+                for (int x = 0; x < Parameters.boardSize; x++) {
 
                     value = influenceMaps[lastMap][y][x];
                     influenceMaps[thisMap][y][x] = value;
@@ -358,7 +356,7 @@ public class Model {
                                         continue;
                                     break;
                                 case 1:
-                                    if (x == Constants.boardSize - 1)
+                                    if (x == Parameters.boardSize - 1)
                                         continue;
                                     break;
                                 case 2:
@@ -366,7 +364,7 @@ public class Model {
                                         continue;
                                     break;
                                 case 3:
-                                    if (y == Constants.boardSize - 1)
+                                    if (y == Parameters.boardSize - 1)
                                         continue;
                                     break;
                             }
@@ -452,16 +450,16 @@ public class Model {
     }
 
 //    public void storeKO(Board board){
-//        for(int i=0;i<Constants.boardSize;i++){
-//            for(int j=0;j<Constants.boardSize;j++){
+//        for(int i=0;i<Parameters.boardSize;i++){
+//            for(int j=0;j<Parameters.boardSize;j++){
 //                koBoard[i][j] = board.checkSpace(j,i);
 //            }
 //        }
 //    }
 //
 //    public boolean violatesKO(Board board){
-//        for(int i=0;i<Constants.boardSize;i++){
-//            for(int j=0;j<Constants.boardSize;j++){
+//        for(int i=0;i<Parameters.boardSize;i++){
+//            for(int j=0;j<Parameters.boardSize;j++){
 //                if (board.checkSpace(j,i)!=koBoard[j][i])
 //                    return false;
 //            }

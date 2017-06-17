@@ -1,6 +1,6 @@
 package Model;
 
-import Service.Constants;
+import Service.Parameters;
 
 import java.util.*;
 
@@ -55,17 +55,17 @@ public class AI {
 
     public AI(int player) {
         this.player = player;
-        influenceMaps = new int[2][Constants.boardSize][Constants.boardSize];
-        if(Constants.dotTree)
+        influenceMaps = new int[2][Parameters.boardSize][Parameters.boardSize];
+        if(Parameters.dotTree)
             dot = new DotBuilder(player);
     }
 
     public Board getMove(Board board) {
-        historyMap = new int[3][Constants.boardSize][Constants.boardSize]; //Reducir de 3 a 2
+        historyMap = new int[3][Parameters.boardSize][Parameters.boardSize]; //Reducir de 3 a 2
         Move current = new Move(board);
-        if(Constants.depth > 1)
+        if(Parameters.depth > 1)
             scoutLayer = true;
-        Move bestMove = negamax(current, Constants.depth, Constants.worstValue, Constants.bestValue, player);
+        Move bestMove = negamax(current, Parameters.depth, Parameters.worstValue, Parameters.bestValue, player);
         return bestMove.board;
     }
 
@@ -91,7 +91,7 @@ public class AI {
         passBoard.pass(player);
         children.addFirst(new Move(passBoard));
 
-        Move bestMove = new Move(Constants.worstValue);
+        Move bestMove = new Move(Parameters.worstValue);
         for(Move child : children) {
             if(child.board == null) {
                 child.board = board.duplicate();
@@ -125,7 +125,7 @@ public class AI {
         passBoard.pass(player);
         children.addFirst(new Move(passBoard));
 
-        Move bestMove = new Move(Constants.worstValue);
+        Move bestMove = new Move(Parameters.worstValue);
         for(Move child : children) {
             if(child.board == null) {
                 child.board = board.duplicate();
@@ -151,7 +151,7 @@ public class AI {
             boardNew = board.duplicate();
             boardNew.addPiece(child.getxPos(), child.getyPos(), child.getPlayer());
             depthNoPrune(boardNew, child, upNext, depth - 1);
-            if(Constants.dotTree) {
+            if(Parameters.dotTree) {
                 dot.addEdge(current, child);
                 dot.setLabel(child);
             }
@@ -159,7 +159,7 @@ public class AI {
 
         Node best = player == this.player ? Collections.max(children) : Collections.min(children);
         current.setHeuristicValue(best.getHeuristicValue());
-        if(Constants.dotTree) {
+        if(Parameters.dotTree) {
             dot.changeColor(best, "red");
             dot.setLabel(current);
         }
@@ -168,8 +168,8 @@ public class AI {
 
     private LinkedList<Move> generateMoves(Board board, int player) {
         LinkedList<Move> moves = new LinkedList<>();
-        for(int y=0; y < Constants.boardSize ; y++){
-            for(int x=0; x < Constants.boardSize ; x++){
+        for(int y = 0; y < Parameters.boardSize ; y++){
+            for(int x = 0; x < Parameters.boardSize ; x++){
                 if (board.lightVerifyMove(x,y,player)){
                     moves.add(new Move(x, y, historyMap[player][y][x]));
                 }
@@ -182,14 +182,14 @@ public class AI {
     public int ponderHeuristicValue(Board board, int player){
         if(board.gameFinished()) {
             if(board.calculateWinner() == player)
-                return Constants.bestValue - 1;
+                return Parameters.bestValue - 1;
             else
-                return Constants.worstValue + 1;
+                return Parameters.worstValue + 1;
         }
 
         Stone[][] stones = board.getBoard();
-        for (int y = 0; y < Constants.boardSize; y++) {
-            for (int x = 0; x < Constants.boardSize; x++) {
+        for (int y = 0; y < Parameters.boardSize; y++) {
+            for (int x = 0; x < Parameters.boardSize; x++) {
                 if(stones[y][x] != null) {
                     if(stones[y][x].getPlayer() == player)
                         influenceMaps[0][y][x] = 500;
@@ -242,8 +242,8 @@ public class AI {
     private int calculateInfluence() {
         int value;
         int influencePoints = 0;
-        for (int y = 0; y < Constants.boardSize; y++) {
-            for (int x = 0; x < Constants.boardSize; x++) {
+        for (int y = 0; y < Parameters.boardSize; y++) {
+            for (int x = 0; x < Parameters.boardSize; x++) {
                 value = influenceMaps[lastMap][y][x];
                 if(value != 0) {
                     if(value > 0) {
@@ -274,8 +274,8 @@ public class AI {
             int negativeNeighbors;
             int value;
 
-            for (int y = 0; y < Constants.boardSize; y++) {
-                for (int x = 0; x < Constants.boardSize; x++) {
+            for (int y = 0; y < Parameters.boardSize; y++) {
+                for (int x = 0; x < Parameters.boardSize; x++) {
                     positiveNeighbors = 0;
                     negativeNeighbors = 0;
 
@@ -286,7 +286,7 @@ public class AI {
                                     continue;
                                 break;
                             case 1:
-                                if (x == Constants.boardSize - 1)
+                                if (x == Parameters.boardSize - 1)
                                     continue;
                                 break;
                             case 2:
@@ -294,7 +294,7 @@ public class AI {
                                     continue;
                                 break;
                             case 3:
-                                if (y == Constants.boardSize - 1)
+                                if (y == Parameters.boardSize - 1)
                                     continue;
                                 break;
                         }
@@ -342,8 +342,8 @@ public class AI {
             int value;
             int diff;
 
-            for (int y = 0; y < Constants.boardSize; y++) {
-                for (int x = 0; x < Constants.boardSize; x++) {
+            for (int y = 0; y < Parameters.boardSize; y++) {
+                for (int x = 0; x < Parameters.boardSize; x++) {
 
                     value = influenceMaps[lastMap][y][x];
                     influenceMaps[thisMap][y][x] = value;
@@ -360,7 +360,7 @@ public class AI {
                                         continue;
                                     break;
                                 case 1:
-                                    if (x == Constants.boardSize - 1)
+                                    if (x == Parameters.boardSize - 1)
                                         continue;
                                     break;
                                 case 2:
@@ -368,7 +368,7 @@ public class AI {
                                         continue;
                                     break;
                                 case 3:
-                                    if (y == Constants.boardSize - 1)
+                                    if (y == Parameters.boardSize - 1)
                                         continue;
                                     break;
                             }
@@ -413,8 +413,8 @@ public class AI {
         String ANSI_WHITE = "\u001B[37m";
         String color;
 
-        for (int y = 0; y < Constants.boardSize; y++) {
-            for (int x = 0; x < Constants.boardSize; x++) {
+        for (int y = 0; y < Parameters.boardSize; y++) {
+            for (int x = 0; x < Parameters.boardSize; x++) {
                 if(influenceMaps[lastMap][y][x] > 0)
                     color = ANSI_GREEN;
                 else if(influenceMaps[lastMap][y][x] < 0)

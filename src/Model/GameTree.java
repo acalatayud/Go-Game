@@ -1,6 +1,6 @@
 package Model;
 
-import Service.Constants;
+import Service.Parameters;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +17,7 @@ public class GameTree {
     public GameTree(Board board, int player){
         this.board = board;
         this.player = player;
-        if(Constants.dotTree)
+        if(Parameters.dotTree)
         	this.b = new DotBuilder(player);
     }
 
@@ -28,21 +28,21 @@ public class GameTree {
      */
     public Node buildTree(Board board){
     	Node move = null;
-        if (Constants.prune){
-            if (Constants.depth != -1)
-                move = depthWithPrune(board,new Node(-2,-2,0),Constants.depth,Constants.worstValue,Constants.bestValue,player);
+        if (Parameters.prune){
+            if (Parameters.depth != -1)
+                move = depthWithPrune(board,new Node(-2,-2,0), Parameters.depth, Parameters.worstValue, Parameters.bestValue,player);
             else {
                 return null; // return timeWithPrune()
             }
         }
         else {
-            if (Constants.depth != -1)
-                move = depthNoPrune(board,new Node(-2,-2,0),player,Constants.depth);
+            if (Parameters.depth != -1)
+                move = depthNoPrune(board,new Node(-2,-2,0),player, Parameters.depth);
             else {
                 return null; // return timeNoPrune()
             }
         }
-        if(Constants.dotTree)
+        if(Parameters.dotTree)
             b.close();
         return move;
     }
@@ -55,7 +55,7 @@ public class GameTree {
         }
 
         int upNext = player == 1 ? 2 : 1;
-        int startingValue = player == this.player ? Constants.worstValue: Constants.bestValue;
+        int startingValue = player == this.player ? Parameters.worstValue: Parameters.bestValue;
         node.setHeuristicValue(startingValue);
         Node selected = new Node(-1,-1, player);
         selected.setHeuristicValue(startingValue);
@@ -80,13 +80,13 @@ public class GameTree {
         	}
         	else
         		child.setColor(2); //Pruned
-        	if(Constants.dotTree) {
+        	if(Parameters.dotTree) {
         		b.addEdge(node, child);
         		b.setLabel(child);
         	}
         }
         
-        if(Constants.dotTree) {
+        if(Parameters.dotTree) {
         	b.changeColor(selected, "red");
         	b.setLabel(node);
         }
@@ -107,7 +107,7 @@ public class GameTree {
             boardNew = board.duplicate();
             boardNew.addPiece(child.getxPos(), child.getyPos(), child.getPlayer());
             depthNoPrune(boardNew, child, upNext, depth - 1);
-            if(Constants.dotTree) {
+            if(Parameters.dotTree) {
             	b.addEdge(current, child);
             	b.setLabel(child);
             }
@@ -115,7 +115,7 @@ public class GameTree {
 
         Node best = player == this.player ? Collections.max(children) : Collections.min(children);
         current.setHeuristicValue(best.getHeuristicValue());
-        if(Constants.dotTree) {
+        if(Parameters.dotTree) {
         	b.changeColor(best, "red");
         	b.setLabel(current);
         }
@@ -128,8 +128,8 @@ public class GameTree {
         ArrayList<Node> moves = new ArrayList<>();
         Node toAdd;
 
-        for(int i=0; i < Constants.boardSize ; i++){
-            for(int j=0; j < Constants.boardSize ; j++){
+        for(int i = 0; i < Parameters.boardSize ; i++){
+            for(int j = 0; j < Parameters.boardSize ; j++){
                 if (board.verifyMove(j,i,player)){
                 toAdd = new Node(j,i,player);
                 moves.add(toAdd);

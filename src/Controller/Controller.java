@@ -5,13 +5,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import Model.Board;
 import Model.Model;
-import Service.Constants;
+import Service.Parameters;
 import View.BoardView;
 
 /**
@@ -21,7 +20,7 @@ public class Controller {
 	private static int AIPlayer = 2;
 	private static Model model;
 	private static BoardView boardView;
-	private static int playerN; // this variable is not updated by all controller functions thus becoming useless after initiation.
+	//private static int playerN; // this variable is not updated by all controller functions thus becoming useless after initiation.
 	private static int visual;
 	private static int file;
 	private static int tree;
@@ -30,6 +29,7 @@ public class Controller {
 
 		ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
 		Board board = null;
+		int playerN = 1;
 		try {
 			if (argsList.size() < 3)
 				throw new IllegalArgumentException();
@@ -52,7 +52,6 @@ public class Controller {
 				}
 
 				int player = argsList.indexOf("-player");
-				playerN=1;
 
 				if ((player != -1 && file == -1) || (file != -1 && player == -1)){
 					throw new IllegalArgumentException();
@@ -83,7 +82,7 @@ public class Controller {
 						maxtimeN = Integer.parseInt(argsList.get(maxtime + 1));
 						if (maxtimeN<=0)
 							throw new NumberFormatException();
-						Constants.maxTime = maxtimeN;
+						Parameters.maxTime = maxtimeN;
 					}
 					catch (NumberFormatException e){
 						throw new IllegalArgumentException();
@@ -95,7 +94,7 @@ public class Controller {
 						depthN = Integer.parseInt(argsList.get(depth + 1));
 						if(depthN<=0)
 							throw new NumberFormatException();
-						Constants.depth = depthN;
+						Parameters.depth = depthN;
 					}
 					catch (NumberFormatException e){
 						throw new IllegalArgumentException();
@@ -106,10 +105,10 @@ public class Controller {
 				tree = argsList.indexOf("-tree");
 
 				if (prune!=-1)
-					Constants.prune = true;
+					Parameters.prune = true;
 
 				if(tree!=-1 && file!=1)
-					Constants.dotTree = true;
+					Parameters.dotTree = true;
 			}
 		}
 		catch (IllegalArgumentException e){
