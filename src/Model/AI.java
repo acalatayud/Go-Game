@@ -22,37 +22,6 @@ public class AI {
     private boolean scoutLayer;
     private DotBuilder dot;
 
-    private class Move implements Comparable{
-        public int x;
-        public int y;
-        public int value;
-        public int weight;
-        public Board board;
-
-        public Move(int x, int y, int weight) {
-            this.x = x;
-            this.y = y;
-            this.weight = weight;
-        }
-
-        public Move(Board board) {
-            this.board = board;
-        }
-
-        public Move(int value) {
-            this.value = value;
-        }
-
-        /** Esta invertido a proposito para que el orden quede descendente*/
-        @Override
-        public int compareTo(Object o) {
-            if(o instanceof Move)
-                return ((Move) o).weight - weight;
-            else
-                return 0;
-        }
-    }
-
     public AI(int player) {
         this.player = player;
         influenceMaps = new int[2][Parameters.boardSize][Parameters.boardSize];
@@ -138,32 +107,6 @@ public class AI {
         }
 
         return bestMove;
-        /*ArrayList<Node> children = generateMoves(board,player);
-        if (depth==0 || board.gameFinished()) { // If depth reached or is terminal node (only possibility is pass)
-            current.setHeuristicValue(Model.ponderHeuristicValue(board, this.player));
-            return current;
-        }
-
-        int upNext = player == 1 ? 2 : 1;
-        Board boardNew;
-
-        for (Node child : children ) {
-            boardNew = board.duplicate();
-            boardNew.addPiece(child.getxPos(), child.getyPos(), child.getPlayer());
-            depthNoPrune(boardNew, child, upNext, depth - 1);
-            if(Parameters.dotTree) {
-                dot.addEdge(current, child);
-                dot.setLabel(child);
-            }
-        }
-
-        Node best = player == this.player ? Collections.max(children) : Collections.min(children);
-        current.setHeuristicValue(best.getHeuristicValue());
-        if(Parameters.dotTree) {
-            dot.changeColor(best, "red");
-            dot.setLabel(current);
-        }
-        return best;*/
     }
 
     private LinkedList<Move> generateMoves(Board board, int player) {
