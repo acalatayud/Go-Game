@@ -1,6 +1,7 @@
 package Model;
 
 import Service.Constants;
+import Controller.Controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,12 +23,17 @@ public class Model {
     private static int potentialTerritoryWeight = 10;
     private static int territoryWeight = 100;
     private static int captureWeight = 100;
+    private int AIplayer;
 
 
-    public Model(Board board){
-        this.board = board;
+    public Model(Board board, int AIplayer){
         if(board ==null)
-            System.out.println("board in model is null");
+            throw new NullPointerException("Board can't be null");
+        if(AIplayer != 1 && AIplayer != 2)
+            throw new IllegalArgumentException("AIplayer must be 1 or 2");
+
+        this.board = board;
+        this.AIplayer = AIplayer;
     }
 
     public Board getBoard() {
@@ -35,7 +41,7 @@ public class Model {
     }
 
     public boolean addPiece(int x, int y, int player) {
-        if(player == board.getPlayerN() && board.addPiece(x, y, player)) {
+        if(player != AIplayer && player == board.getPlayerN() && board.addPiece(x, y, player)) {
             board.nextPlayer();
             return true;
         }
@@ -43,7 +49,7 @@ public class Model {
     }
 
     public boolean pass(int player) {
-        if(player == board.getPlayerN()) {
+        if(player != AIplayer && player == board.getPlayerN()) {
             board.pass(player);
             board.nextPlayer();
             return true;
@@ -414,7 +420,7 @@ public class Model {
 
     public void gameLoop(){
 
-        AI ai = new AI(2);
+        AI ai = new AI(AIplayer);
 
         while(!board.gameFinished()){
             try {
@@ -423,28 +429,14 @@ public class Model {
             catch (Exception e){
                 continue;
             }
-            int playerTurn = board.getPlayerN();
-            //System.out.println(playerTurn);
-            if(playerTurn == 2) {
+
+            if(board.getPlayerN() == AIplayer) {
                 System.out.println("entro al if");
-                //Board copy = board.duplicate();
-                //System.out.println(board);
-                //System.out.println(board.duplicate());
                 long start = System.nanoTime();
-                //Board auxBoard = getAIMove(board);
-                System.out.println((System.nanoTime() - start)/1000000);
-                start = System.nanoTime();
-                System.out.println(board);
                 board = ai.getMove(board);
-                System.out.println(board);
                 System.out.println((System.nanoTime() - start)/1000000);
-                /*if (auxBoard == null)
-                    board.pass(playerTurn);
-                else
-                    board = auxBoard;*/
                 board.nextPlayer();
-                System.out.println(board.getPlayerN());
-                Controller.Controller.updateView(board);
+                Controller.updateView(board);
             }
 
         }

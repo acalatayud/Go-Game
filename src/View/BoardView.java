@@ -203,7 +203,7 @@ public class BoardView {
             if (clickAvailable) {
                 clickAvailable = false;
                 if (e.getSource() == btnPass) {
-                    Controller.pass();
+                    Controller.pass(playerN);
 
                 }
                 if (e.getSource() instanceof StoneButton) {

@@ -52,7 +52,7 @@ public class Controller {
 				}
 
 				int player = argsList.indexOf("-player");
-				playerN=0;
+				playerN=1;
 
 				if ((player != -1 && file == -1) || (file != -1 && player == -1)){
 					throw new IllegalArgumentException();
@@ -134,8 +134,15 @@ public class Controller {
 
 		if(board == null)
 			board = new Board();
-		
-		model = new Model(board);
+
+		int AIplayer;
+		if(playerN == 1)
+			AIplayer = 2;
+		else
+			AIplayer = 1;
+
+
+		model = new Model(board, AIplayer);
 		boardView = new BoardView();
 		boardView.update(model.getBoard());
 
@@ -152,7 +159,6 @@ public class Controller {
 		});
 
 		if (visual != -1) {
-			playerN = 1;
 			model.gameLoop();
 		}
 		else{
@@ -190,8 +196,8 @@ public class Controller {
 
 	/**The controller tells the model that a player has passed and updates the player.
 	 * */
-	public static void pass(){
-		model.pass(playerN);
+	public static void pass(int player){
+		model.pass(player);
 	}
 
 	// no se que hace, la deje por las dudas.
