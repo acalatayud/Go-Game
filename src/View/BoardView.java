@@ -18,8 +18,8 @@ public class BoardView {
     private boolean clickAvailable = true;
     private JFrame frame;
     int playerN;
-    ImageIcon blackStone = new ImageIcon("src/Sources/blackStone20.png");
-    ImageIcon whiteStone = new ImageIcon("src/Sources/whiteStone20.png");
+    ImageIcon blackStone = new ImageIcon("src/Sources/blackStone40.png");
+    ImageIcon whiteStone = new ImageIcon("src/Sources/whiteStone40.png");
     private JTextArea txtPlayern;
     private JTextArea player1Captures;
     private JTextArea player2Captures;
