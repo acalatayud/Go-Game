@@ -30,12 +30,17 @@ public class AI {
     }
 
     public Move getMove(Board board) {
-        historyMap = new int[2][Parameters.boardSize][Parameters.boardSize]; //Reducir de 3 a 2
+        historyMap = new int[2][Parameters.boardSize][Parameters.boardSize];
         int otherPlayer = player == 1 ? 2 : 1;
         Move current = new Move(board, otherPlayer);
-        if(Parameters.depth > 1)
-            scoutLayer = true;
-        Move bestMove = negamax(current, Parameters.depth, Parameters.worstValue, Parameters.bestValue, player);
+        Move bestMove;
+        if(Parameters.prune) {
+            if (Parameters.depth > 1)
+                scoutLayer = true;
+            bestMove = negamax(current, Parameters.depth, Parameters.worstValue, Parameters.bestValue, player);
+        }
+        else
+            bestMove = negamaxNoPrune(current, Parameters.depth, player);
         return bestMove;
     }
 
