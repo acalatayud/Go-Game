@@ -109,6 +109,7 @@ public class Model {
         return value;
     }
 
+
     public static void test1() {
         lastMap = 0;
         int[][] in =
@@ -193,20 +194,36 @@ public class Model {
 
     }
 
-    public static void test3() {
+    public static void koTest1() {
         Board board = new Board();
-        Random rand = new Random(1);
-        for(int i=0; i < 50; i++) {
-            board.addPiece(rand.nextInt(13), rand.nextInt(13), rand.nextInt(2) + 1);
-        }
-        //System.out.println(board);
+        Random rand = new Random();
+        long from = System.currentTimeMillis();
+        long to = 3000;
+        board.addPiece(1,9,1);
+        board.addPiece(1,10,2);
+        board.addPiece(2,8,1);
+        board.addPiece(2,9,2);
+        board.addPiece(2,11,2);
+        board.addPiece(3,9,1);
+        board.addPiece(3,10,2);
+        Controller.updateView(board);
 
-        long start = System.nanoTime();
+        while(System.currentTimeMillis()-from < to){}
 
-        for(int i=0; i < 100000; i++)
-            ponderHeuristicValue(board, 1);
+        board.addPiece(2,10,1);
+        Controller.updateView(board);
 
-        System.out.println((System.nanoTime() - start)/1000000);
+        from = System.currentTimeMillis();
+        while(System.currentTimeMillis()-from < to){}
+
+        board.addPiece(2,9,2);
+        Controller.updateView(board);
+
+//        for(int i=0; i < 1000; i++) {
+//            board.addPiece(rand.nextInt(13), rand.nextInt(13), board.getPlayerN());
+//            Controller.updateView(board);
+//            board.nextPlayer();
+//        }
     }
 
     private static int calculateInfluence() {
@@ -429,7 +446,7 @@ public class Model {
             }
 
             if(board.getPlayerN() == AIplayer) {
-                System.out.println("entro al if");
+                System.out.println("juega AI");
                 long start = System.nanoTime();
                 board = ai.getMove(board).board;
                 System.out.println((System.nanoTime() - start)/1000000);

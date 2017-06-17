@@ -37,7 +37,7 @@ public class Board {
     //169x3 table
     ArrayList<Integer> zobristIndices = new ArrayList<>();
     private static long[][] zobristTable = null;
-    private long zorbistHash;
+    private long zobristHash;
     private long prevZobristHash;
     private int playerN = 1;
     private HashSet<Chain> chains;
@@ -59,7 +59,7 @@ public class Board {
 
         chains = new HashSet<Chain>();
         prevZobristHash = 0;
-        zorbistHash = zobristHash();
+        zobristHash = zobristHash();
         playerCaptures[0] = 0;
         playerCaptures[1] = 0;
         playerPassed[0] = false;
@@ -70,7 +70,7 @@ public class Board {
         Board newBoard = new Board();
         newBoard.zobristIndices = (ArrayList<Integer>) zobristIndices.clone();
         newBoard.prevZobristHash = prevZobristHash;
-        newBoard.zorbistHash = zorbistHash;
+        newBoard.zobristHash = zobristHash;
         newBoard.playerCaptures = playerCaptures.clone();
         newBoard.playerPassed = playerPassed.clone();
         newBoard.playerN = this.playerN;
@@ -94,18 +94,29 @@ public class Board {
     }
 
     public boolean addPiece(int x, int y, int player){
-        long newHash=0;
+        long newHash = zobristHash;
+        ArrayList<Integer> oldZobristIndices = (ArrayList<Integer>)zobristIndices.clone();
         if (!verifyMove(x, y, player)) {
           if(x == -1 && y == -1)
-        		pass(player);
-            //System.out.println("piece could not be added to the model");
-            return false;
+              pass(player);
+
+          return false;
         }
         else{
 
-            HashSet<Chain> oldChains = (HashSet<Chain>)chains.clone();
+            HashSet<Chain> oldChains = new HashSet<>();
             int[] oldPlayerCaptures = playerCaptures.clone();
-            Stone[][] oldBoard = board.clone();
+            Stone[][] oldBoard = new Stone[Parameters.boardSize][Parameters.boardSize];
+
+            for (Chain chain : chains) {
+                Chain newChain = new Chain();
+                for (Stone stone : chain.getStones()) {
+                    Stone newStone = new Stone(stone.getX(), stone.getY(), stone.getPlayer(), stone.getLiberties(), newChain);
+                    oldBoard[stone.getY()][stone.getX()] = newStone;
+                }
+                oldChains.add(newChain);
+            }
+
             int liberties = 4;
             HashSet<Chain> samePlayerChains = new HashSet<>(4);
             ArrayList<Stone> samePlayerStones = new ArrayList<>(4);
@@ -192,17 +203,20 @@ public class Board {
                 s.decLiberties();
 
             if(violatesKo(newHash)) {
-                System.out.println("violates ko");
+                System.out.println("player:"+player+" violates ko");
+                System.out.println("Hash:"+newHash+" prevHash:"+ zobristHash +" prevprevhash:"+prevZobristHash);
                 chains = oldChains;
                 board = oldBoard;
                 playerCaptures =oldPlayerCaptures;
+                zobristIndices = oldZobristIndices;
                 return false;
             }
-            playerPassed[0] = false;
-            playerPassed[1] = false;
-
-            updateHashes(newHash);
-            return true;
+            else {
+                playerPassed[0] = false;
+                playerPassed[1] = false;
+                updateHashes(newHash);
+                return true;
+            }
         }
     }
 
@@ -492,8 +506,7 @@ public class Board {
             }
         }
     }
-    /**Esta funcion rehashea la tabla a partir de un solo cambio, la hice por si alguien
-     * la puede utilizar es una altarnativa mucho mas eficiente.
+    /**Esta funcion rehashea la tabla a partir de un solo cambio
      * */
     public long zobristXor(long oldHash, int x, int y, int player){
         int index = y*13 +x;
@@ -522,14 +535,10 @@ public class Board {
         return oldHash;
     }
 
-    public void updateHashes(){
-        prevZobristHash = zorbistHash;
-        zorbistHash = zobristHash();
-    }
 
     public void updateHashes(long newHash){
-        prevZobristHash = zorbistHash;
-        zorbistHash = newHash;
+        prevZobristHash = zobristHash;
+        zobristHash = newHash;
     }
 
     public long zobristHash(){
