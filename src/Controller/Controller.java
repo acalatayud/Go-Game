@@ -144,19 +144,19 @@ public class Controller {
 		boardView = new BoardView();
 		boardView.update(model.getBoard());
 
-		//initializes the app window.
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					boardView.initFrame();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
 		if (visual != -1) {
+			//initializes the app window.
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						boardView.initFrame();
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			
 			model.gameLoop();
 		}
 		else{
