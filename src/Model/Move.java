@@ -9,6 +9,7 @@ public class Move implements Comparable{
     public int id;
     public int player;
     public boolean pruned;
+    public boolean empty;
 
     public Move(int x, int y, int weight, int player) {
         this.x = x;
@@ -20,6 +21,7 @@ public class Move implements Comparable{
     public Move(Board board, int player) {
         this.board = board;
         this.player = player;
+        this.empty = true;
     }
 
     public Move(int value) {
@@ -37,10 +39,12 @@ public class Move implements Comparable{
 
     @Override
     public String toString() {
-        if(x == -1 && y == -1)
-            return "PASS";
-        if(x == -2 && y == -2)
-            return "START";
+        if(empty) {
+            if(board.passed(player))
+                return "PASS";
+            else
+                return "START";
+        }
         return "(" + x +", " + y +")";
     }
 }

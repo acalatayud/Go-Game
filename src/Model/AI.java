@@ -159,18 +159,11 @@ public class AI {
 
         dilation(5);
 
-        //System.out.println(calculateInfluence());
-
         value += influenceWeight * calculateInfluence();
-
-        //printInfluenceMap();
 
         erosion(21);
 
-        //System.out.println(calculateInfluence());
         value += potentialTerritoryWeight * calculateInfluence();
-
-        //printInfluenceMap();
 
         int otherPlayer;
         if(player == 1)
@@ -178,15 +171,11 @@ public class AI {
         else
             otherPlayer = 1;
 
-        //System.out.println(board.getPlayerCaptures(player));
-        //System.out.println(board.getPlayerCaptures(otherPlayer));
         int[] territories = board.calculateTerritory();
 
         value += territoryWeight * (territories[player-1] - territories[otherPlayer-1]);
 
         value += captureWeight * (board.getPlayerCaptures(player) - board.getPlayerCaptures(otherPlayer));
-
-        //System.out.println("Value: "+value);
 
         return value;
     }
@@ -269,8 +258,6 @@ public class AI {
                     else if (value <= 0 && positiveNeighbors == 0)
                         influenceMaps[thisMap][y][x] -= negativeNeighbors;
 
-//                    else
-//                        influenceMaps[thisMap][y][x] = 0;
                 }
             }
 
