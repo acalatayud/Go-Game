@@ -349,6 +349,10 @@ public class Board {
     public void pass(int player){
         playerPassed[player-1] = true; //TODO: Resetear si en el turno siguiente no pasa
     }
+    
+    public boolean passed(int player){
+        return playerPassed[player-1];
+    }
 
     public boolean gameFinished(){
         //falta game finished
