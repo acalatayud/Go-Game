@@ -34,20 +34,51 @@ public class AI {
         int otherPlayer = player == 1 ? 2 : 1;
         Move current = new Move(board, otherPlayer);
         Move bestMove;
-        if(Parameters.prune) {
-            if (Parameters.depth > 1)
-                scoutLayer = true;
-            bestMove = negamax(current, Parameters.depth, Parameters.worstValue, Parameters.bestValue, player);
+
+        TimeLimit timeLimit;
+        if(Parameters.maxTime != -1) {
+            final long maxTime = Parameters.maxTime * 1000 + System.currentTimeMillis();
+            timeLimit = new TimeLimit() {
+                @Override
+                public boolean exceeded() {
+                    return System.currentTimeMillis() > maxTime;
+                }
+            };
+            int depth = 0;
+            Move move = current;
+            do {
+                System.out.println(depth);
+                bestMove = move;
+                depth++;
+                move = getMove(current, depth, timeLimit);
+            } while(!timeLimit.exceeded());
         }
-        else
-            bestMove = negamaxNoPrune(current, Parameters.depth, player);
+        else {
+            timeLimit = new TimeLimit() {
+                @Override
+                public boolean exceeded() {
+                    return false;
+                }
+            };
+
+            bestMove = getMove(current, Parameters.depth, timeLimit);
+        }
         if(Parameters.dotTree) {
         	dot.close();
-        }        
+        }
         return bestMove;
     }
 
-    private Move negamax(Move move, int depth, int alpha, int beta, int player) {
+    private Move getMove(Move current, int depth, TimeLimit timeLimit) {
+        if (Parameters.prune) {
+            if (depth > 1)
+                scoutLayer = true;
+            return negamax(current, depth, Parameters.worstValue, Parameters.bestValue, player, timeLimit);
+        } else
+            return negamaxNoPrune(current, depth, player, timeLimit);
+    }
+
+    private Move negamax(Move move, int depth, int alpha, int beta, int player, TimeLimit timeLimit) {
         Board board = move.board;
         if(depth == 0 || board.gameFinished()) {
             move.value = ponderHeuristicValue(board, player);
@@ -71,12 +102,15 @@ public class AI {
 
         Move bestMove = new Move(Parameters.worstValue);
         for(Move child : children) {
+            if(timeLimit.exceeded())
+                break;
+
             if(beta > alpha) {
                 if (child.board == null) {
                     child.board = board.duplicate();
                     child.board.addPiece(child.x, child.y, player);
                 }
-                child.value = -negamax(child, depth - 1, -beta, -alpha, otherPlayer).value;
+                child.value = -negamax(child, depth - 1, -beta, -alpha, otherPlayer, timeLimit).value;
 
                 if (child.value > bestMove.value)
                     bestMove = child;
@@ -104,7 +138,7 @@ public class AI {
         return bestMove;
     }
 
-    private Move negamaxNoPrune(Move move, int depth, int player) {
+    private Move negamaxNoPrune(Move move, int depth, int player, TimeLimit timeLimit) {
         Board board = move.board;
         if(depth == 0 || board.gameFinished()) {
             move.value = ponderHeuristicValue(board, player);
@@ -119,11 +153,14 @@ public class AI {
 
         Move bestMove = new Move(Parameters.worstValue);
         for(Move child : children) {
+            if(timeLimit.exceeded())
+                break;
+
             if(child.board == null) {
                 child.board = board.duplicate();
                 child.board.addPiece(child.x, child.y, player);
             }
-            child.value = -negamaxNoPrune(child, depth-1, otherPlayer).value;
+            child.value = -negamaxNoPrune(child, depth-1, otherPlayer, timeLimit).value;
 
             if(child.value > bestMove.value)
                 bestMove = child;
