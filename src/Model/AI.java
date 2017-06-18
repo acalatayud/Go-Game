@@ -35,10 +35,9 @@ public class AI {
         Move current = new Move(board, otherPlayer);
         Move bestMove;
 
-        TimeLimit timeLimit;
         if(Parameters.maxTime != -1) {
             final long maxTime = Parameters.maxTime * 1000 + System.currentTimeMillis();
-            timeLimit = new TimeLimit() {
+            TimeLimit timeLimit = new TimeLimit() {
                 @Override
                 public boolean exceeded() {
                     return System.currentTimeMillis() > maxTime;
@@ -47,14 +46,14 @@ public class AI {
             int depth = 0;
             Move move = current;
             do {
-                System.out.println(depth);
+                System.out.println("Max depth: "+depth);
                 bestMove = move;
                 depth++;
                 move = getMove(current, depth, timeLimit);
             } while(!timeLimit.exceeded());
         }
         else {
-            timeLimit = new TimeLimit() {
+            TimeLimit timeLimit = new TimeLimit() {
                 @Override
                 public boolean exceeded() {
                     return false;
