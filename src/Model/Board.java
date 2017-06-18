@@ -93,6 +93,9 @@ public class Board {
             playerN = 1;
     }
 
+    public void mockAddPiece(int x, int y, int player){
+        board[y][x] = new Stone((byte)x,(byte)y,(byte)player);
+    }
 
     public boolean addPiece(int x, int y, int player){
         long newHash = zobristHash;
@@ -445,7 +448,7 @@ public class Board {
             return borders;
         }
         else {
-            mockBoard.addPiece(xPos, yPos, 1); // Mark as visited.
+            mockBoard.mockAddPiece(xPos, yPos, 1); // Mark as visited.
         }
 
         if (rb!=0){
