@@ -81,14 +81,14 @@ public class GameTree {
         	else
         		child.setColor(2); //Pruned
         	if(Parameters.dotTree) {
-        		b.addEdge(node, child);
-        		b.setLabel(child);
+        		//b.addEdge(node, child);
+                //b.setLabel(child);
         	}
         }
         
         if(Parameters.dotTree) {
-        	b.changeColor(selected, "red");
-        	b.setLabel(node);
+            //b.changeColor(selected, "red");
+            //b.setLabel(node);
         }
         return selected;
     }
@@ -108,16 +108,16 @@ public class GameTree {
             boardNew.addPiece(child.getxPos(), child.getyPos(), child.getPlayer());
             depthNoPrune(boardNew, child, upNext, depth - 1);
             if(Parameters.dotTree) {
-            	b.addEdge(current, child);
-            	b.setLabel(child);
+                //b.addEdge(current, child);
+                //b.setLabel(child);
             }
         }
 
         Node best = player == this.player ? Collections.max(children) : Collections.min(children);
         current.setHeuristicValue(best.getHeuristicValue());
         if(Parameters.dotTree) {
-        	b.changeColor(best, "red");
-        	b.setLabel(current);
+            //b.changeColor(best, "red");
+            //b.setLabel(current);
         }
         return best;
     }
