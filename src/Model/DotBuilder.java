@@ -9,11 +9,11 @@ public class DotBuilder
 	private int id;
 	private int startingPlayer;
 
-	public DotBuilder(int player)
+	public DotBuilder(int player, String file)
 	{
 		try
 		{
-			output = new FileWriter("tree.dot");
+			output = new FileWriter(file);
 			output.write("digraph {\n");
 		} catch (IOException e)
 		{

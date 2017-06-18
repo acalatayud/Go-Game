@@ -18,7 +18,7 @@ public class GameTree {
         this.board = board;
         this.player = player;
         if(Parameters.dotTree)
-        	this.b = new DotBuilder(player);
+        	this.b = new DotBuilder(player, "tree.dot");
     }
 
     /**

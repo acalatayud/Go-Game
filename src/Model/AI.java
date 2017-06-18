@@ -2,6 +2,7 @@ package Model;
 
 import Service.Parameters;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -25,8 +26,6 @@ public class AI {
     public AI(int player) {
         this.player = player;
         influenceMaps = new int[2][Parameters.boardSize][Parameters.boardSize];
-        if(Parameters.dotTree)
-            dot = new DotBuilder(player);
     }
 
     public Move getMove(Board board) {
@@ -34,6 +33,8 @@ public class AI {
         int otherPlayer = player == 1 ? 2 : 1;
         Move current = new Move(board, otherPlayer);
         Move bestMove;
+        File tree1 = null;
+        File tree2 = null;
 
         if(Parameters.maxTime != -1) {
             final long maxTime = Parameters.maxTime * 1000 + System.currentTimeMillis();
@@ -45,12 +46,29 @@ public class AI {
             };
             int depth = 0;
             Move move = current;
+            if(Parameters.dotTree) {
+        		tree1 = new File("tree.dot");
+        		tree2 = new File("tree2.dot");
+            }
             do {
+            	if(Parameters.dotTree)
+            		dot = new DotBuilder(player, "tree2.dot");
                 System.out.println("Max depth: "+depth);
                 bestMove = move;
                 depth++;
                 move = getMove(current, depth, timeLimit);
+                if(Parameters.dotTree) {
+                	dot.close();
+                	if(!timeLimit.exceeded()) {
+                		tree1.delete();
+                		tree2.renameTo(tree1);
+                	}
+                	else {
+                		System.out.println("Deleted: "+depth);
+                	}
+                }
             } while(!timeLimit.exceeded());
+            tree2.delete();
         }
         else {
             TimeLimit timeLimit = new TimeLimit() {
@@ -59,11 +77,11 @@ public class AI {
                     return false;
                 }
             };
-
+            dot = new DotBuilder(player, "tree.dot");
             bestMove = getMove(current, Parameters.depth, timeLimit);
-        }
-        if(Parameters.dotTree) {
-        	dot.close();
+            if(Parameters.dotTree) {
+            	dot.close();
+            }
         }
         return bestMove;
     }
@@ -102,7 +120,7 @@ public class AI {
         Move bestMove = new Move(Parameters.worstValue);
         for(Move child : children) {
             if(timeLimit.exceeded())
-                break;
+            	break;
 
             if(beta > alpha) {
                 if (child.board == null) {
@@ -152,8 +170,8 @@ public class AI {
 
         Move bestMove = new Move(Parameters.worstValue);
         for(Move child : children) {
-            if(timeLimit.exceeded())
-                break;
+            if(timeLimit.exceeded()) 
+            	break;
 
             if(child.board == null) {
                 child.board = board.duplicate();
