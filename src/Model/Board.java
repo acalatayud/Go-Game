@@ -93,9 +93,10 @@ public class Board {
             playerN = 1;
     }
 
+
     public boolean addPiece(int x, int y, int player){
         long newHash = zobristHash;
-        ArrayList<Integer> oldZobristIndices = (ArrayList<Integer>)zobristIndices.clone();
+
         if (!verifyMove(x, y, player)) {
           if(x == -1 && y == -1)
               pass(player);
@@ -103,19 +104,20 @@ public class Board {
           return false;
         }
         else{
-
-            HashSet<Chain> oldChains = new HashSet<>();
+            ArrayList<Stone> changedStones = new ArrayList<>();
+            HashSet<Chain> changedChains = new HashSet<>();
+            ArrayList<Integer> oldZobristIndices = (ArrayList<Integer>)zobristIndices.clone();
             int[] oldPlayerCaptures = playerCaptures.clone();
-            Stone[][] oldBoard = new Stone[Parameters.boardSize][Parameters.boardSize];
-
-            for (Chain chain : chains) {
-                Chain newChain = new Chain();
-                for (Stone stone : chain.getStones()) {
-                    Stone newStone = new Stone(stone.getX(), stone.getY(), stone.getPlayer(), stone.getLiberties(), newChain);
-                    oldBoard[stone.getY()][stone.getX()] = newStone;
-                }
-                oldChains.add(newChain);
-            }
+//            HashSet<Chain> oldChains = new HashSet<>();
+//            Stone[][] oldBoard = new Stone[Parameters.boardSize][Parameters.boardSize];
+//            for (Chain chain : chains) {
+//                Chain newChain = new Chain();
+//                for (Stone stone : chain.getStones()) {
+//                    Stone newStone = new Stone(stone.getX(), stone.getY(), stone.getPlayer(), stone.getLiberties(), newChain);
+//                    oldBoard[stone.getY()][stone.getX()] = newStone;
+//                }
+//                oldChains.add(newChain);
+//            }
 
             int liberties = 4;
             HashSet<Chain> samePlayerChains = new HashSet<>(4);
@@ -173,12 +175,14 @@ public class Board {
                     capturedStones = neighbor.decLiberties();
                     if(capturedStones != null) {
                         playerCaptures[player-1] += capturedStones.size();
+                        changedChains.add(capturedStones.get(0).getChain());
                         chains.remove(capturedStones.get(0).getChain());
                         for(Stone stone : capturedStones) {
                             if(otherPlayerStones.contains(stone))
                                 liberties++;
                             int stoneYIndex = stone.getY();
                             int stoneXIndex = stone.getX();
+                            changedStones.add(board[stoneYIndex][stoneXIndex]);
                             board[stoneYIndex][stoneXIndex] = null;
                             newHash = zobristXor(newHash,stoneXIndex,stoneYIndex,0);
                         }
@@ -203,11 +207,22 @@ public class Board {
                 s.decLiberties();
 
             if(violatesKo(newHash)) {
+
+                chains.addAll(samePlayerChains);
+                chains.remove(newChain);
+                for(Chain c : changedChains){
+                    chains.add(c);
+                }
+                for(Stone s : changedStones){
+                    board[s.getY()][s.getX()] = s;
+                }
+                board[y][x] = null;
+
                 System.out.println("player:"+player+" violates ko");
                 System.out.println("Hash:"+newHash+" prevHash:"+ zobristHash +" prevprevhash:"+prevZobristHash);
-                chains = oldChains;
-                board = oldBoard;
-                playerCaptures =oldPlayerCaptures;
+//                chains = oldChains;
+//                board = oldBoard;
+                playerCaptures = oldPlayerCaptures;
                 zobristIndices = oldZobristIndices;
                 return false;
             }

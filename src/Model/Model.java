@@ -226,6 +226,93 @@ public class Model {
 //        }
     }
 
+
+    public static void koTest2() {
+        Board board = new Board();
+        Random rand = new Random();
+        long from = System.currentTimeMillis();
+        long to = 3000;
+        board.addPiece(0,12,2);
+        board.addPiece(1,11,2);
+        board.addPiece(2,12,2);
+        board.addPiece(2,11,1);
+        board.addPiece(3, 12,1);
+        Controller.updateView(board);
+
+        while (System.currentTimeMillis() - from < to) {
+        }
+
+        board.addPiece(1, 12, 1);
+        Controller.updateView(board);
+
+        from = System.currentTimeMillis();
+        while (System.currentTimeMillis() - from < to) {
+        }
+
+        board.addPiece(2, 12, 2);
+        Controller.updateView(board);
+    }
+
+
+    public static void koTest3() {
+        Board board = new Board();
+        Random rand = new Random();
+        long from = System.currentTimeMillis();
+        long to = 3000;
+        board.addPiece(2,11,2);
+        board.addPiece(3,10,2);
+        board.addPiece(4,10,2);
+        board.addPiece(4,11,2);
+        board.addPiece(3,12,2);
+        board.addPiece(2,12,1);
+        board.addPiece(4,12,1);
+        board.addPiece(5,12,1);
+
+        Controller.updateView(board);
+
+        while (System.currentTimeMillis() - from < to) {
+        }
+
+        board.addPiece(3, 11, 1);
+        Controller.updateView(board);
+
+        from = System.currentTimeMillis();
+        while (System.currentTimeMillis() - from < to) {
+        }
+
+        board.addPiece(3, 12, 2);
+        Controller.updateView(board);
+    }
+
+    public static void koTest4() {
+        Board board = new Board();
+        Random rand = new Random();
+        long from = System.currentTimeMillis();
+        long to = 3000;
+        board.addPiece(11,10,1);
+        board.addPiece(12,10,1);
+        board.addPiece(11,11,1);
+        board.addPiece(12,11,2);
+        board.addPiece(10,12,2);
+        board.addPiece(11,12,2);
+
+
+        Controller.updateView(board);
+
+        while (System.currentTimeMillis() - from < to) {
+        }
+
+        board.addPiece(12, 12, 1);
+        Controller.updateView(board);
+
+        from = System.currentTimeMillis();
+        while (System.currentTimeMillis() - from < to) {
+        }
+
+        board.addPiece(12, 11, 2);
+        Controller.updateView(board);
+    }
+
     private static int calculateInfluence() {
         int value;
         int influencePoints = 0;
