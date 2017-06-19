@@ -106,7 +106,7 @@ public class Controller {
 				if (prune!=-1)
 					Parameters.prune = true;
 
-				if(tree!=-1 && file!=1)
+				if(tree!=-1 && file!=-1)
 					Parameters.dotTree = true;
 			}
 		}

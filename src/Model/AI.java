@@ -68,7 +68,8 @@ public class AI {
                 	}
                 }
             } while(!timeLimit.exceeded());
-            tree2.delete();
+            if(Parameters.dotTree)
+              tree2.delete();
         }
         else {
             TimeLimit timeLimit = new TimeLimit() {
@@ -77,7 +78,8 @@ public class AI {
                     return false;
                 }
             };
-            dot = new DotBuilder(player, "tree.dot");
+            if(Parameters.dotTree)
+            	  dot = new DotBuilder(player, "tree.dot");
             bestMove = getMove(current, Parameters.depth, timeLimit);
             if(Parameters.dotTree) {
             	dot.close();
