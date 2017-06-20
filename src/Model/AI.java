@@ -90,7 +90,7 @@ public class AI {
 
     private Move getMove(Move current, int depth, TimeLimit timeLimit) {
         if (Parameters.prune) {
-            if (depth > 1)
+            if (depth > 3)
                 scoutLayer = true;
             return negamax(current, depth, Parameters.worstValue, Parameters.bestValue, player, timeLimit);
         } else
