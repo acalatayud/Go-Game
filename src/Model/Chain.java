@@ -19,7 +19,9 @@ public class Chain {
         liberties += stone.getLiberties();
     }
 
-    /**Returns amount of captured stones**/
+    /**
+     * Returns amount of captured stones
+     **/
     public ArrayList<Stone> updateLiberties(int diff) {
         liberties += diff;
         if(liberties == 0) {

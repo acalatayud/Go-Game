@@ -29,7 +29,9 @@ public class Move implements Comparable{
         this.value = value;
     }
 
-    /** Esta invertido a proposito para que el orden quede descendente*/
+    /**
+     * Esta invertido para que el orden quede descendente
+     * */
     @Override
     public int compareTo(Object o) {
         if(o instanceof Move)

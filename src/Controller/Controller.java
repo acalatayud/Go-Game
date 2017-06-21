@@ -17,7 +17,6 @@ import View.BoardView;
 public class Controller {
 	private static Model model;
 	private static BoardView boardView;
-	//private static int playerN; // this variable is not updated by all controller functions thus becoming useless after initiation.
 	private static int visual;
 	private static int file;
 	private static int tree;
@@ -126,11 +125,8 @@ public class Controller {
 		//     prune : Saved in constants
 		//     tree : -1 is false, !=-1 is true
 
-
-
 		if(board == null)
 			board = new Board();
-
 
 		model = new Model(board, AIplayer);
 		boardView = new BoardView();
@@ -187,7 +183,8 @@ public class Controller {
 		boardView.update(board);
 	}
 
-	/**The controller tells the model that a player has passed and updates the player.
+	/**
+	 * The controller tells the model that a player has passed and updates the player.
 	 * */
 	public static void pass(int player){
 		model.pass(player);

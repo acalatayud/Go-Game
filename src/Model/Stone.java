@@ -30,7 +30,9 @@ public class Stone {
         this(x, y, player, liberties, new Chain());
     }
 
-    /**Returns amount of captured stones**/
+    /**
+     * Returns amount of captured stones
+     **/
     public ArrayList<Stone> decLiberties() {
         liberties--;
         return chain.updateLiberties(-1);

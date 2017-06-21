@@ -91,7 +91,8 @@ public class BoardView {
 
     }
 
-    /**Auxiliary method to place a board´s stones within the swing environment.
+    /**
+     * Auxiliary method to place a board´s stones within the swing environment.
      * */
     public void update(Board board){
         int y=0;
@@ -137,7 +138,8 @@ public class BoardView {
         }
     }
 
-    /**Class extension to support background rendering.
+    /**
+     * Class extension to support background rendering.
      * */
     private class ImagePanel extends JPanel{
 
@@ -166,7 +168,8 @@ public class BoardView {
         }
     }
 
-    /**Class extension to support background rendering.
+    /**
+     * Class extension to support background rendering.
      * */
     private class StoneButton extends JButton{
         int row;
@@ -186,7 +189,8 @@ public class BoardView {
         }
     }
 
-    /**Button listener which event triggers are handled by the controller.
+    /**
+     * Button listener which event triggers are handled by the controller.
      * */
     private class ButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
@@ -209,37 +213,23 @@ public class BoardView {
 
     }
 
-    /**Updates the player to transition from one player to the next.
-     * */
-//    public void nextPlayer(){
-//
-//        if(playerN == 1) {
-//            playerN = 2;
-//            txtPlayern.setText("player 2");
-//            clickAvailable = false;
-//        }
-//        else {
-//            playerN = 1;
-//            txtPlayern.setText("player 1");
-//            clickAvailable = true;
-//        }
-//
-//    }
-
-    /**Auxiliary function to initialize the frame.
+    /**
+     * Auxiliary function to initialize the frame.
     * */
     public void initFrame(){
         frame.setVisible(true);
     }
 
-    /**This method will remove a stone from a certain position
+    /**
+     * This method will remove a stone from a certain position
      * @return true if there was a stone to be removed and it was removed successfully, false otherwise.
      * */
     public void removeStone(StoneButton stone){
         stone.setIcon(null);
     }
 
-    /** sets a stone on the indi    cated position.
+    /**
+     * sets a stone on the indicated position.
      *@return true if the stone could be successfully placed, false otherwise.
     **/
     public boolean setStone(StoneButton stone, int player){
@@ -253,21 +243,4 @@ public class BoardView {
         return true;
 
     }
-
-    /**sets the current player within the view.
-     *@param player: 1 if it´s the black player, 2 if it´s the white player.
-     * */
-//    private void setPlayer(int player){
-//        if(player != 1 & player!= 2)
-//            throw new IllegalArgumentException("wrong playerN");
-//        if(player == 1){
-//            playerN = 1;
-//            txtPlayern.setText("player 1");
-//        }
-//        else {
-//            playerN = 2;
-//            txtPlayern.setText("player 2");
-//        }
-//    }
-
 }

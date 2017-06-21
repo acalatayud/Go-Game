@@ -68,12 +68,6 @@ public class Model {
 
         board.addPiece(2,9,2);
         Controller.updateView(board);
-
-//        for(int i=0; i < 1000; i++) {
-//            board.addPiece(rand.nextInt(13), rand.nextInt(13), board.getPlayerN());
-//            Controller.updateView(board);
-//            board.nextPlayer();
-//        }
     }
 
 
@@ -176,7 +170,7 @@ public class Model {
             }
 
             if(board.getPlayerN() == AIplayer) {
-                System.out.println("juega AI");
+
                 long start = System.nanoTime();
                 board = ai.getMove(board).board;
                 System.out.println((System.nanoTime() - start)/1000000);
@@ -186,7 +180,7 @@ public class Model {
 
         }
         int winner = board.calculateWinner();
-        // Mandar por pantalla el ganador
+
         System.out.println("winner is: "+winner);
     }
 
