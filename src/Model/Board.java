@@ -14,24 +14,6 @@ import java.util.HashMap;
  *     2 representing a position held by the AI
  */
 public class Board {
-    /*private static class Piece{
-        private int player;
-        private Integer xPos;
-        private Integer yPos;
-
-        public Piece(int xPos, int yPos, int player){
-            this.xPos = xPos;
-            this.yPos = yPos;
-            this.player = player;
-        }
-
-        public int hashCode() {
-            int result = 17;
-            result = 31 * result + xPos.hashCode();
-            result = 31 * result + yPos.hashCode();
-            return result;
-        }
-    }*/
 
     //zobristTable indices: empty=0, black=1, white=2
     //169x3 table
@@ -355,8 +337,6 @@ public class Board {
     }
 
     public boolean gameFinished(){
-        //falta game finished
-
         return playerPassed[0] && playerPassed[1];
     }
 
@@ -457,7 +437,6 @@ public class Board {
         int winner;
         if ( (winner = territory[0]+playerCaptures[0] - (territory[1]+playerCaptures[1])) == 0)
             return winner;
-        //System.out.println(winner);
         return winner > 0 ? 1 : 2;
     }
 

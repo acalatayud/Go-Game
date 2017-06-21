@@ -2,9 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 
-/**
- * Created by Lucas on 26/05/2017.
- */
+
 public class Chain {
     private ArrayList<Stone> stones;
     private short liberties;

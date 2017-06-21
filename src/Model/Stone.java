@@ -2,9 +2,6 @@ package Model;
 
 import java.util.ArrayList;
 
-/**
- * Created by Lucas on 26/05/2017.
- */
 public class Stone {
     private byte x;
     private byte y;

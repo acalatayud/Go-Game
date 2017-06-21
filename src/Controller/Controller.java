@@ -13,9 +13,7 @@ import Model.Model;
 import Service.Parameters;
 import View.BoardView;
 
-/**
- * Created by juan on 23/05/17.
- */
+
 public class Controller {
 	private static Model model;
 	private static BoardView boardView;
@@ -194,12 +192,6 @@ public class Controller {
 	public static void pass(int player){
 		model.pass(player);
 	}
-
-	// no se que hace, la deje por las dudas.
-    public static Board waitForPlayerMove(Board board){
-        return new Board();//dummy para q compile
-        // cuando el jugador pasa devuelve null
-    }
 
     public static Board readBoard(File file){
       Board board = new Board();

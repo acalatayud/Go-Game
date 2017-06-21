@@ -5,9 +5,7 @@ import Service.Parameters;
 import java.io.File;
 import java.util.*;
 
-/**
- * Created by Lucas on 10/06/2017.
- */
+
 public class AI {
 
     private int[][][] influenceMaps;
