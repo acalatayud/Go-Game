@@ -99,28 +99,27 @@ public class Board {
 
     public boolean addPiece(int x, int y, int player){
         long newHash = zobristHash;
-
+        ArrayList<Integer> oldZobristIndices = (ArrayList<Integer>)zobristIndices.clone();
         if (!verifyMove(x, y, player)) {
-          if(x == -1 && y == -1)
-              pass(player);
+            if(x == -1 && y == -1)
+                pass(player);
 
-          return false;
+            return false;
         }
         else{
-            ArrayList<Stone> changedStones = new ArrayList<>();
-            Chain backupChain = new Chain();
-            ArrayList<Integer> oldZobristIndices = (ArrayList<Integer>)zobristIndices.clone();
+
+            HashSet<Chain> oldChains = new HashSet<>();
             int[] oldPlayerCaptures = playerCaptures.clone();
-//            HashSet<Chain> oldChains = new HashSet<>();
-//            Stone[][] oldBoard = new Stone[Parameters.boardSize][Parameters.boardSize];
-//            for (Chain chain : chains) {
-//                Chain newChain = new Chain();
-//                for (Stone stone : chain.getStones()) {
-//                    Stone newStone = new Stone(stone.getX(), stone.getY(), stone.getPlayer(), stone.getLiberties(), newChain);
-//                    oldBoard[stone.getY()][stone.getX()] = newStone;
-//                }
-//                oldChains.add(newChain);
-//            }
+            Stone[][] oldBoard = new Stone[Parameters.boardSize][Parameters.boardSize];
+
+            for (Chain chain : chains) {
+                Chain newChain = new Chain();
+                for (Stone stone : chain.getStones()) {
+                    Stone newStone = new Stone(stone.getX(), stone.getY(), stone.getPlayer(), stone.getLiberties(), newChain);
+                    oldBoard[stone.getY()][stone.getX()] = newStone;
+                }
+                oldChains.add(newChain);
+            }
 
             int liberties = 4;
             HashSet<Chain> samePlayerChains = new HashSet<>(4);
@@ -128,10 +127,7 @@ public class Board {
             ArrayList<Stone> otherPlayerStones = new ArrayList<>(4);
             Stone neighbor = null;
             ArrayList<Stone> capturedStones;
-            //TODO: Modularizar
-            //En violateSuicide se deberian recorrer los 4 neighbors
-            //Podriamos hacerlo mas eficiente si obtenemos los neghibors
-            //una sola vez para evitar chequear dos veces las condiciones
+
             for(int i=0; i<4 ; i++){
                 switch(i){
                     case 0:
@@ -177,19 +173,14 @@ public class Board {
                     otherPlayerStones.add(neighbor);
                     capturedStones = neighbor.decLiberties();
                     if(capturedStones != null) {
+
                         playerCaptures[player-1] += capturedStones.size();
-
-                        for(Stone s :capturedStones) {
-                            backupChain.addStone(s);
-                        }
-
                         chains.remove(capturedStones.get(0).getChain());
                         for(Stone stone : capturedStones) {
                             if(otherPlayerStones.contains(stone))
                                 liberties++;
                             int stoneYIndex = stone.getY();
                             int stoneXIndex = stone.getX();
-                            changedStones.add(board[stoneYIndex][stoneXIndex].clone(backupChain));
                             board[stoneYIndex][stoneXIndex] = null;
                             newHash = zobristXor(newHash,stoneXIndex,stoneYIndex,0);
                         }
@@ -214,20 +205,9 @@ public class Board {
                 s.decLiberties();
 
             if(violatesKo(newHash)) {
-
-                chains.addAll(samePlayerChains);
-                chains.remove(newChain);
-                chains.add(backupChain);
-                for(Stone s : changedStones){
-                    board[s.getY()][s.getX()] = s;
-                }
-                board[y][x] = null;
-
-                System.out.println("player:"+player+" violates ko");
-                System.out.println("Hash:"+newHash+" prevHash:"+ zobristHash +" prevprevhash:"+prevZobristHash);
-//                chains = oldChains;
-//                board = oldBoard;
-                playerCaptures = oldPlayerCaptures;
+                chains = oldChains;
+                board = oldBoard;
+                playerCaptures =oldPlayerCaptures;
                 zobristIndices = oldZobristIndices;
                 return false;
             }
