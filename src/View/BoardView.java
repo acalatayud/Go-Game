@@ -243,4 +243,7 @@ public class BoardView {
         return true;
 
     }
+    public void setWinner(Integer platern){
+        txtPlayern.setText("winner: "+platern.toString());
+    }
 }

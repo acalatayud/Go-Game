@@ -170,17 +170,14 @@ public class Model {
             }
 
             if(board.getPlayerN() == AIplayer) {
-
-                long start = System.nanoTime();
                 board = ai.getMove(board).board;
-                System.out.println((System.nanoTime() - start)/1000000);
                 board.nextPlayer();
                 Controller.updateView(board);
             }
 
         }
         int winner = board.calculateWinner();
-
+        Controller.setWinnerView(winner);
         System.out.println("winner is: "+winner);
     }
 

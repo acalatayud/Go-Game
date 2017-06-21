@@ -51,7 +51,6 @@ public class AI {
             do {
             	if(Parameters.dotTree)
             		dot = new DotBuilder(player, "tree2.dot");
-                System.out.println("Max depth: "+depth);
                 bestMove = move;
                 depth++;
                 move = getMove(current, depth, timeLimit);

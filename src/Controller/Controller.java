@@ -163,18 +163,12 @@ public class Controller {
 	 * @return true if the model validated the placement, false otherwise.
 	 * */
 	public static boolean placingAttempt(int x, int y, int player){
-		System.out.println("reached placing attempt");
-		System.out.println("X coord:"+x);
-		System.out.println("Y coord:"+y);
-		System.out.println("player:"+player);
 
 		if(model.addPiece(x,y,player)) {
-			System.out.println("player move valid");
 			boardView.update(model.getBoard());
 			return true;
 		}
 		else {
-			System.out.println("player move not valid");
 			return false;
 		}
 
@@ -217,4 +211,8 @@ public class Controller {
 
     	return board;
     }
+
+	public static void setWinnerView(Integer player){
+		boardView.setWinner(player);
+	}
 }
