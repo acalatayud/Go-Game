@@ -110,7 +110,11 @@ public class AI {
             scoutLayer = false;
             for(Move child : children) {
                 child.board = board.duplicate();
-                child.board.addPiece(child.x, child.y, player);
+                if(!child.board.addPiece(child.x, child.y, player)) {
+                    child.board = null;                     //Para que falle en el proximo loop
+                    child.weight = Parameters.bestValue;    //Collections.sort lo deja al final
+                    continue;
+                }
                 child.weight = ponderHeuristicValue(child.board, player);
             }
             Collections.sort(children);
@@ -127,7 +131,10 @@ public class AI {
             if(beta > alpha) {
                 if (child.board == null) {
                     child.board = board.duplicate();
-                    child.board.addPiece(child.x, child.y, player);
+                    if(!child.board.addPiece(child.x, child.y, player)) { //Viola regla KO
+                        child.value = Parameters.worstValue;
+                        continue;
+                    }
                 }
                 child.value = -negamax(child, depth - 1, -beta, -alpha, otherPlayer, timeLimit).value;
 
@@ -214,7 +221,10 @@ public class AI {
 
     public int ponderHeuristicValue(Board board, int player){
         if(board.gameFinished()) {
-            if(board.calculateWinner() == player)
+            int winner = board.calculateWinner();
+            if(winner == player)
+                return Parameters.bestValue - 1;
+            else if(winner == 0 && player != this.player)
                 return Parameters.bestValue - 1;
             else
                 return Parameters.worstValue + 1;
